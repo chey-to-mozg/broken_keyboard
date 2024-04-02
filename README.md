@@ -1,11 +1,17 @@
 # broken_keyboard
 Broken keyboard game
 
+to launch game use python 3.10+ 
+
+**python main.py**
+
 # Tasks
 1. Create main menu window  
-   1. add username field
-   2. add start button
-   3. add leaderboard button
+   1. ~~add username field~~
+   2. ~~add start button~~
+   3. ~~add leaderboard button~~
+   4. add font size
+   5. add window size
 2. Create window with Game
    1. Load words from file
    2. Load keyboard config
