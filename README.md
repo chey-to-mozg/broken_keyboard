@@ -29,4 +29,5 @@ to launch game use python 3.10+ https://www.python.org/downloads/
    5. ~~Add main menu button~~
 4. Create window with leaderboard
    1. Add loading data from DB
-   2. Add rendering of names with their results (ordered)
+   2. Add rendering of names with their results (ordered) 
+5. Add current keyboard layout on screen
