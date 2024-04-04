@@ -7,7 +7,6 @@ class MainMenu:
     def __init__(self, root: tk.Tk, set_user_callback: Callable):
         self.mainframe = tk.Frame(root, bg='blue')
         self.mainframe.pack(fill=tk.BOTH, expand=1)
-        self.i = 0
 
         self.username = tk.StringVar(value='@username')
 

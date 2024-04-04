@@ -22,11 +22,11 @@ to launch game use python 3.10+
    7. ~~Add handling of pressed keys~~
    8. ~~Add coloring for word~~
 3. Create window with Results
-   1. Add list of finished words
-   2. Add name rendering
-   3. Add total result
-   4. Add saving result to DB
-   5. Add main menu button
+   1. ~~Add list of finished words~~
+   2. ~~Add name rendering~~
+   3. ~~Add total result~~
+   4. ~~Add saving result to DB~~
+   5. ~~Add main menu button~~
 4. Create window with leaderboard
    1. Add loading data from DB
    2. Add rendering of names with their results (ordered)

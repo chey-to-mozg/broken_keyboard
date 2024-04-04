@@ -27,7 +27,7 @@ class GameWindow:
 
         self.key_mapping = key_mapping
 
-        self.mainframe = tk.Frame(root, bg='blue')
+        self.mainframe = tk.Frame(root, bg='grey')
         self.mainframe.pack(fill=tk.BOTH, expand=1)
 
         self.timer_start = timer_init
