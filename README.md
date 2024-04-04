@@ -1,7 +1,7 @@
 # broken_keyboard
 Broken keyboard game
 
-to launch game use python 3.10+ 
+to launch game use python 3.10+ https://www.python.org/downloads/
 
 **python main.py**
 
