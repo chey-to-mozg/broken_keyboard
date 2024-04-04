@@ -1,0 +1,5 @@
+a:f
+f:a
+q:k
+k:l
+l:q

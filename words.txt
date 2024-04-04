@@ -1,0 +1,9 @@
+programmer
+command
+linux
+windows
+user
+telecom
+yadro
+task
+job
