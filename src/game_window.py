@@ -18,6 +18,8 @@ class GameWindow:
         self.current_word_idx = 0
         self.current_letter_index = 0
         self.game_started = False
+
+        self.interrupt_game_callback = interrupt_game_callback
         self.set_results_callback = set_results_callback
 
         self.words = words  # copy?
@@ -33,7 +35,7 @@ class GameWindow:
         self.time_of_start: float | None = None
         tk.Label(self.mainframe, width=7, textvariable=self.timer).pack(side=tk.TOP, anchor=tk.N)
 
-        tk.Button(self.mainframe, text='Main menu', command=interrupt_game_callback).pack(side=tk.TOP, anchor=tk.NE)
+        tk.Button(self.mainframe, text='Main menu', command=self.interupt_game).pack(side=tk.TOP, anchor=tk.NE)
 
         self.word_frame: tk.Frame | None = None
         self._render_current_word()
@@ -42,7 +44,7 @@ class GameWindow:
         self.last_pressed_key_entry = tk.Label(self.mainframe, width=7, textvariable=self.last_pressed_key)
         self.last_pressed_key_entry.pack(side=tk.BOTTOM, anchor=tk.S)
 
-        root.bind('<KeyPress>', self._process_button_press)
+        self.mainframe.bind_all('<KeyPress>', self._process_button_press)
 
         root.mainloop()
 
@@ -87,9 +89,17 @@ class GameWindow:
                 self.letter_labels[self.current_letter_index].config(bg='red')
                 self.last_pressed_key_entry.config(bg='red')
 
-    def set_result(self, *args):
+    def destroy_window(self):
+        self.mainframe.unbind_all('<KeyPress>')
         self.mainframe.destroy()
+
+    def set_result(self, *args):
+        self.destroy_window()
         self.set_results_callback(self.result, self.words[:self.current_word_idx])
+
+    def interupt_game(self, *args):
+        self.destroy_window()
+        self.interrupt_game_callback()
 
     def update_timer(self):
         diff = time.time() - self.time_of_start
