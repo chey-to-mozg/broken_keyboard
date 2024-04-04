@@ -1,7 +1,8 @@
 import tkinter as tk
 
 from src.game_window import GameWindow
-from src.main_menu import MainMenu
+from src.menu_window import MainMenu
+from src.result_window import ResultWindow
 
 
 class MainWindow:
@@ -23,12 +24,11 @@ class MainWindow:
         self.key_mapping = {}
         self.load_keys_mapping()
 
-        self.timer_init = 5
+        self.timer_init = 10
 
         self.open_menu()
 
     def set_user_name_and_start_game(self, username):
-        self.root.quit()
         self.username = username
         GameWindow(
             self.root,
@@ -44,8 +44,7 @@ class MainWindow:
         MainMenu(self.root, set_user_callback=self.set_user_name_and_start_game)
 
     def open_result_window(self, result: int, finished_words: list[str]):
-        print(f'call ResultWindow() with result {result} and correct words {finished_words}')
-        self.root.destroy()
+        ResultWindow(self.root, self.username, result, finished_words, menu_callback=self.open_menu)
 
     def load_words(self):
         with open('words.txt', 'r') as f:
