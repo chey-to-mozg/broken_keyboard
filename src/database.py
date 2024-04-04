@@ -20,9 +20,6 @@ class Database:
     def safe_result(self, username: str, result: int):
         if self.results.get(username, 0) < result:
             self.results[username] = result
-        try:
-            with open(self.results_file, 'w') as f:
-                for name, result in self.results.items():
-                    f.write(f'{name}:{result}\n')
-        except Exception:
-            print(self.results)
+        with open(self.results_file, 'w') as f:
+            for name, result in self.results.items():
+                f.write(f'{name}:{result}\n')
