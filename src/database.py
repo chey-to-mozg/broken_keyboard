@@ -18,7 +18,7 @@ class Database:
             self.results = dict(sorted(self.results.items(), key=lambda item: item[1], reverse=True))
 
     def safe_result(self, username: str, result: int):
-        if self.results.get(username, 0) < result:
+        if self.results.get(username, -1) < result:
             self.results[username] = result
         with open(self.results_file, 'w') as f:
             for name, result in self.results.items():
