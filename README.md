@@ -11,16 +11,16 @@ to launch game use python 3.10+
    2. ~~add start button~~
    3. ~~add leaderboard button~~
    4. add font size
-   5. add window size
+   5. ~~add window size~~
 2. Create window with Game
-   1. Load words from file
-   2. Load keyboard config
-   3. Add field with current word
-   4. Add field with pressed key
-   5. Add main menu button
-   6. Add timer field
-   7. Add handling of pressed keys
-   8. Add coloring for word
+   1. ~~Load words from file~~
+   2. ~~Load keyboard config~~
+   3. ~~Add field with current word~~
+   4. ~~Add field with pressed key~~
+   5. ~~Add main menu button~~
+   6. ~~Add timer field~~
+   7. ~~Add handling of pressed keys~~
+   8. ~~Add coloring for word~~
 3. Create window with Results
    1. Add list of finished words
    2. Add name rendering

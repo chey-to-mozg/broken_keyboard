@@ -1,28 +1,26 @@
 import tkinter as tk
-from tkinter import ttk
 from functools import partial
 from typing import Callable
 
 
 class MainMenu:
     def __init__(self, root: tk.Tk, set_user_callback: Callable):
-        self.mainframe = ttk.Frame(root, padding="3 3 12 12")
-        self.mainframe.grid(column=0, row=0, sticky='NWES')
-
-        root.columnconfigure(0, weight=1)
-        root.rowconfigure(0, weight=1)
-
-        ttk.Button(self.mainframe, text='Leaderboard', command=None).grid(row=1, column=3)
+        self.mainframe = tk.Frame(root, bg='blue')
+        self.mainframe.pack(fill=tk.BOTH, expand=1)
+        self.i = 0
 
         self.username = tk.StringVar(value='@username')
 
-        username_entry = ttk.Entry(self.mainframe, width=7, textvariable=self.username)
-        username_entry.grid(row=2, column=2, sticky='WE')
+        self.leaderboard_button = tk.Button(self.mainframe, text='Leaderboard', command=None)
+        self.leaderboard_button.pack(side=tk.TOP, anchor=tk.NE)
 
-        ttk.Button(self.mainframe, text="Start game", command=partial(self.set_user, set_user_callback)).grid(row=3, column=2, sticky='W')
+        combined_frame = tk.Frame(self.mainframe, bg='green')
+        combined_frame.pack(expand=1)
+        username_entry = tk.Entry(combined_frame, width=20, textvariable=self.username)
+        username_entry.pack(pady=5, padx=5)
 
-        for child in self.mainframe.winfo_children():
-            child.grid_configure(padx=5, pady=5)
+        start_button = tk.Button(combined_frame, text="Start game", command=partial(self.set_user, set_user_callback))
+        start_button.pack(pady=5, padx=5)
 
         username_entry.focus()
         root.mainloop()
@@ -30,5 +28,3 @@ class MainMenu:
     def set_user(self, callback: Callable, *args):
         self.mainframe.destroy()
         callback(self.username.get())
-
-
