@@ -5,7 +5,7 @@ from typing import Callable
 
 class MainMenu:
     def __init__(self, root: tk.Tk, set_user_callback: Callable):
-        self.mainframe = tk.Frame(root, bg='blue')
+        self.mainframe = tk.Canvas(root, bg='blue')
         self.mainframe.pack(fill=tk.BOTH, expand=1)
 
         self.username = tk.StringVar(value='@username')
@@ -20,6 +20,9 @@ class MainMenu:
 
         start_button = tk.Button(combined_frame, text="Start game", command=partial(self.set_user, set_user_callback))
         start_button.pack(pady=5, padx=5)
+
+        image = tk.PhotoImage(file='test.png')
+        self.mainframe.create_image(50, 50, image=image)
 
         username_entry.focus()
         root.mainloop()
