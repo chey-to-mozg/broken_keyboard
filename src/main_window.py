@@ -3,6 +3,7 @@ import tkinter as tk
 from src.game_window import GameWindow
 from src.menu_window import MainMenu
 from src.result_window import ResultWindow
+from src.leaderboard_window import LeaderboardWindow
 
 
 class MainWindow:
@@ -39,9 +40,16 @@ class MainWindow:
             set_results_callback=self.open_result_window,
         )
 
+    def open_leaderboard(self):
+        LeaderboardWindow(self.root, open_menu_callback=self.open_menu)
+
     def open_menu(self):
         self.username = ''
-        MainMenu(self.root, set_user_callback=self.set_user_name_and_start_game)
+        MainMenu(
+            self.root,
+            set_user_callback=self.set_user_name_and_start_game,
+            open_leaderboard_callback=self.open_leaderboard,
+        )
 
     def open_result_window(self, result: int, finished_words: list[str]):
         ResultWindow(self.root, self.username, result, finished_words, menu_callback=self.open_menu)
