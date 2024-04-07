@@ -32,18 +32,24 @@ class GameWindow:
         self.mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self.mainframe.pack(fill=tk.BOTH, expand=1)
 
-        tk.Button(self.mainframe, text='Главное меню', command=self.interupt_game, font=setups.ButtonsFont).pack(side=tk.TOP, anchor=tk.NE)
+        tk.Button(self.mainframe, text='Главное меню', command=self.interupt_game, font=setups.ButtonsFont).pack(
+            side=tk.TOP, anchor=tk.NE
+        )
 
         self.timer_start = timer_init
         self.timer = tk.IntVar(value=self.timer_start)
         self.time_of_start: float | None = None
-        tk.Label(self.mainframe, width=7, textvariable=self.timer, font=setups.MainInfoFont).pack(side=tk.TOP, anchor=tk.N)
+        tk.Label(self.mainframe, width=7, textvariable=self.timer, font=setups.MainInfoFont).pack(
+            side=tk.TOP, anchor=tk.N
+        )
 
         self.word_frame: tk.Frame | None = None
         self._render_current_word()
 
         self.last_pressed_key = tk.StringVar(value='')
-        self.last_pressed_key_entry = tk.Label(self.mainframe, width=2, textvariable=self.last_pressed_key, font=setups.LettersFont)
+        self.last_pressed_key_entry = tk.Label(
+            self.mainframe, width=2, textvariable=self.last_pressed_key, font=setups.LettersFont
+        )
         self.last_pressed_key_entry.pack(side=tk.BOTTOM, anchor=tk.S, pady=5)
 
         self.mainframe.bind_all('<KeyPress>', self._process_button_press)
@@ -97,7 +103,7 @@ class GameWindow:
 
     def set_result(self, *args):
         self.destroy_window()
-        self.set_results_callback(self.result, self.words[:self.current_word_idx])
+        self.set_results_callback(self.result, self.words[: self.current_word_idx])
 
     def interupt_game(self, *args):
         self.destroy_window()

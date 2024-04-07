@@ -12,7 +12,9 @@ class ResultWindow:
         self.mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self.mainframe.pack(fill=tk.BOTH, expand=1)
 
-        tk.Button(self.mainframe, text='Главное меню', command=self.open_menu, font=setups.ButtonsFont).pack(side=tk.TOP, anchor=tk.NE)
+        tk.Button(self.mainframe, text='Главное меню', command=self.open_menu, font=setups.ButtonsFont).pack(
+            side=tk.TOP, anchor=tk.NE
+        )
 
         combined_frame = tk.Frame(self.mainframe, bg='grey')
         combined_frame.pack(side=tk.LEFT, padx=10)
@@ -33,4 +35,3 @@ class ResultWindow:
     def open_menu(self):
         self.mainframe.destroy()
         self.menu_callback()
-
