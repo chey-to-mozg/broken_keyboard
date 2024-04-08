@@ -6,8 +6,19 @@ from src.database import Database
 
 
 class ResultWindow:
-    def __init__(self, root: tk.Tk, username: str, result: int, list_of_words: list[str], menu_callback: Callable):
+    def __init__(
+        self,
+        root: tk.Tk,
+        username: str,
+        result: int,
+        correct_keys: int,
+        total_keys: int,
+        list_of_words: list[str],
+        menu_callback: Callable,
+    ):
         self.menu_callback = menu_callback
+
+        accuracy = int(correct_keys / total_keys * 100)  # in %
 
         self.mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self.mainframe.pack(fill=tk.BOTH, expand=1)
@@ -26,9 +37,11 @@ class ResultWindow:
         combined_frame = tk.Frame(self.mainframe)
         combined_frame.pack(expand=1)
         tk.Label(combined_frame, text=username, font=setups.MainInfoFont).pack(pady=5, padx=5)
-        tk.Label(combined_frame, text=f'Счёт: {result}', font=setups.MainInfoFont).pack(pady=5, padx=5)
+        tk.Label(combined_frame, text=f'Завершенных слов: {result}', font=setups.MainInfoFont).pack(pady=5, padx=5)
+        tk.Label(combined_frame, text=f'Верных символов: {correct_keys}', font=setups.MainInfoFont).pack(pady=5, padx=5)
+        tk.Label(combined_frame, text=f'Точность ввода: {accuracy} %', font=setups.MainInfoFont).pack(pady=5, padx=5)
 
-        Database().safe_result(username, result)
+        Database().safe_result(username, result, correct_keys, accuracy)
 
         root.mainloop()
 
