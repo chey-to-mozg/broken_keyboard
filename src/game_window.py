@@ -16,7 +16,11 @@ class GameWindow:
         interrupt_game_callback: Callable,
         set_results_callback: Callable,
     ):
+        # TODO add result class with all fields
         self.result = 0
+        self.total_keys = 0
+        self.correct_keys = 0
+
         self.current_word_idx = 0
         self.current_letter_index = 0
         self.game_started = False
@@ -72,6 +76,7 @@ class GameWindow:
 
     def _process_button_press(self, event):
         if 65 <= event.keycode <= 90:
+            self.total_keys += 1
             if not self.game_started:
                 self.game_started = True
                 self.time_of_start = time.time()
@@ -85,6 +90,7 @@ class GameWindow:
                 self.letter_labels[self.current_letter_index].config(bg='green')
                 self.current_letter_index += 1
                 correct_key = True
+                self.correct_keys += 1
             if self.current_letter_index >= len(self.letter_labels):
                 self.current_letter_index = 0
                 self.current_word_idx += 1
@@ -103,7 +109,7 @@ class GameWindow:
 
     def set_result(self, *args):
         self.destroy_window()
-        self.set_results_callback(self.result, self.words[: self.current_word_idx])
+        self.set_results_callback(self.result, self.correct_keys, self.total_keys, self.words[: self.current_word_idx])
 
     def interupt_game(self, *args):
         self.destroy_window()

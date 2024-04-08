@@ -34,6 +34,7 @@ class MainMenu:
         )
         username_description.pack(pady=5, padx=5)
 
+        # add placeholder instead of initial value
         username_entry = tk.Entry(combined_frame, width=20, textvariable=self.username, font=setups.MainInfoFont)
         username_entry.pack(pady=5, padx=5)
 

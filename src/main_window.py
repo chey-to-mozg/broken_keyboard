@@ -8,12 +8,7 @@ from src.setups import ROOT
 class MainWindow:
     def __init__(self):
         self.root = ROOT
-        window_w = self.root.winfo_screenwidth()
-        window_h = self.root.winfo_screenheight()
-        window_w = 800
-        window_h = 600
-        pad = 3
-        self.root.geometry(f"{window_w - pad}x{window_h - pad}+0+0")
+        self.root.state('zoomed')
         self.root.title('Broken keyboard')
 
         self.username = ''
@@ -50,8 +45,16 @@ class MainWindow:
             open_leaderboard_callback=self.open_leaderboard,
         )
 
-    def open_result_window(self, result: int, finished_words: list[str]):
-        ResultWindow(self.root, self.username, result, finished_words, menu_callback=self.open_menu)
+    def open_result_window(self, result: int, correct_kyes: int, total_keys: int, finished_words: list[str]):
+        ResultWindow(
+            self.root,
+            self.username,
+            result,
+            correct_kyes,
+            total_keys,
+            finished_words,
+            menu_callback=self.open_menu,
+        )
 
     def load_words(self):
         with open('words.txt', 'r') as f:
