@@ -3,6 +3,8 @@ import time
 import tkinter as tk
 from typing import Callable
 
+from src import setups
+
 
 class GameWindow:
     def __init__(
@@ -27,22 +29,28 @@ class GameWindow:
 
         self.key_mapping = key_mapping
 
-        self.mainframe = tk.Frame(root, bg='grey')
+        self.mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self.mainframe.pack(fill=tk.BOTH, expand=1)
+
+        tk.Button(self.mainframe, text='Главное меню', command=self.interupt_game, font=setups.ButtonsFont).pack(
+            side=tk.TOP, anchor=tk.NE
+        )
 
         self.timer_start = timer_init
         self.timer = tk.IntVar(value=self.timer_start)
         self.time_of_start: float | None = None
-        tk.Label(self.mainframe, width=7, textvariable=self.timer).pack(side=tk.TOP, anchor=tk.N)
-
-        tk.Button(self.mainframe, text='Main menu', command=self.interupt_game).pack(side=tk.TOP, anchor=tk.NE)
+        tk.Label(self.mainframe, width=7, textvariable=self.timer, font=setups.MainInfoFont).pack(
+            side=tk.TOP, anchor=tk.N
+        )
 
         self.word_frame: tk.Frame | None = None
         self._render_current_word()
 
         self.last_pressed_key = tk.StringVar(value='')
-        self.last_pressed_key_entry = tk.Label(self.mainframe, width=7, textvariable=self.last_pressed_key)
-        self.last_pressed_key_entry.pack(side=tk.BOTTOM, anchor=tk.S)
+        self.last_pressed_key_entry = tk.Label(
+            self.mainframe, width=2, textvariable=self.last_pressed_key, font=setups.LettersFont
+        )
+        self.last_pressed_key_entry.pack(side=tk.BOTTOM, anchor=tk.S, pady=5)
 
         self.mainframe.bind_all('<KeyPress>', self._process_button_press)
 
@@ -57,7 +65,7 @@ class GameWindow:
         self.letter_labels = []
 
         for letter_id, letter in enumerate(self.words[self.current_word_idx]):
-            label = tk.Label(self.word_frame, text=letter, width=7, height=7)
+            label = tk.Label(self.word_frame, text=letter, width=6, height=3, font=setups.LettersFont)
             label.pack(side=tk.LEFT)
             self.letter_labels.append(label)
         self.letter_labels[0].config(bg='orange')
@@ -95,7 +103,7 @@ class GameWindow:
 
     def set_result(self, *args):
         self.destroy_window()
-        self.set_results_callback(self.result, self.words[:self.current_word_idx])
+        self.set_results_callback(self.result, self.words[: self.current_word_idx])
 
     def interupt_game(self, *args):
         self.destroy_window()

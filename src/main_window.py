@@ -1,21 +1,20 @@
-import tkinter as tk
-
 from src.game_window import GameWindow
+from src.leaderboard_window import LeaderboardWindow
 from src.menu_window import MainMenu
 from src.result_window import ResultWindow
-from src.leaderboard_window import LeaderboardWindow
+from src.setups import ROOT
 
 
 class MainWindow:
     def __init__(self):
-        self.root = tk.Tk()
+        self.root = ROOT
         window_w = self.root.winfo_screenwidth()
         window_h = self.root.winfo_screenheight()
         window_w = 800
         window_h = 600
         pad = 3
         self.root.geometry(f"{window_w - pad}x{window_h - pad}+0+0")
-        self.root.title = 'Broken keyboard'
+        self.root.title('Broken keyboard')
 
         self.username = ''
 

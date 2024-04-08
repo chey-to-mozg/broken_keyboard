@@ -1,33 +1,21 @@
 # broken_keyboard
 Broken keyboard game
 
-to launch game use python 3.10+ https://www.python.org/downloads/
-
+Инструкция:
+1. Для запуска нужен python 3.10+  
+https://www.python.org/downloads/
+2. Скачиваем\клонируем данный репозиторий  
+**git clone https://github.com/chey-to-mozg/broken_keyboard.git**
+3. Переходим в папку с игрой  
+**cd broken_keyboard**
+4. Запускаем игру  
 **python main.py**
 
+Список появляющихся в игре слов находится в файле [words.txt](words.txt)
+
+Переназначенные клавиши находятся в файле [keyboard.txt](keyboard.txt)
+
+Список результатов сохраняется в файл **results.txt**. Для новой сессии можно удалить \ переименовать существующий файл. Новый файл будет создан автоматически
+
 # Tasks
-1. Create main menu window  
-   1. ~~add username field~~
-   2. ~~add start button~~
-   3. ~~add leaderboard button~~
-   4. add font size
-   5. ~~add window size~~
-2. Create window with Game
-   1. ~~Load words from file~~
-   2. ~~Load keyboard config~~
-   3. ~~Add field with current word~~
-   4. ~~Add field with pressed key~~
-   5. ~~Add main menu button~~
-   6. ~~Add timer field~~
-   7. ~~Add handling of pressed keys~~
-   8. ~~Add coloring for word~~
-3. Create window with Results
-   1. ~~Add list of finished words~~
-   2. ~~Add name rendering~~
-   3. ~~Add total result~~
-   4. ~~Add saving result to DB~~
-   5. ~~Add main menu button~~
-4. Create window with leaderboard
-   1. Add loading data from DB
-   2. Add rendering of names with their results (ordered) 
-5. Add current keyboard layout on screen
+Add current keyboard layout on screen
