@@ -50,13 +50,33 @@ class GameWindow:
         self.word_frame: tk.Frame | None = None
         self._render_current_word()
 
-        self.last_pressed_key = tk.StringVar(value='')
-        self.last_pressed_key_entry = tk.Label(
-            self.mainframe, width=2, textvariable=self.last_pressed_key, font=setups.LettersFont
-        )
-        self.last_pressed_key_entry.pack(side=tk.BOTTOM, anchor=tk.S, pady=5)
+        # keyboard layout from left to right, from top to bottom
+        keyboard_frame = tk.Frame(self.mainframe, background='black')
+        keys_on_keyboard = [
+            ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+            ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+            ['z', 'x', 'c', 'v', 'b', 'n', 'm', ''],
+        ]
+        self.keys_to_label_mapping = {}
+        for row in keys_on_keyboard:
+            row_frame = tk.Frame(keyboard_frame, background='black')
+            row_frame.pack()
+            for key in row:
+                key_color = 'grey'
+                if key == '':
+                    # just add space
+                    key_color = 'black'
+                key = self.key_mapping.get(key, key)
+                label = tk.Label(row_frame, width=5, text=key, background=key_color, font=setups.LettersFont)
+                self.keys_to_label_mapping[key] = label
+                label.pack(side=tk.LEFT, pady=5, padx=5)
+
+        keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 100))
+
+        self.last_pressed_key: tk.Label | None = None
 
         self.mainframe.bind_all('<KeyPress>', self._process_button_press)
+        self.mainframe.bind_all('<KeyRelease>', self._process_button_release)
 
         root.mainloop()
 
@@ -84,7 +104,8 @@ class GameWindow:
 
             key = event.char
             swapped_key = self.key_mapping.get(key, key)
-            self.last_pressed_key.set(swapped_key)
+            # color pressed key
+            self.last_pressed_key = self.keys_to_label_mapping[swapped_key]
             correct_key = False
             if swapped_key == self.words[self.current_word_idx][self.current_letter_index]:
                 self.letter_labels[self.current_letter_index].config(bg='green')
@@ -96,12 +117,15 @@ class GameWindow:
                 self.current_word_idx += 1
                 self.result += 1
                 self._render_current_word()
-            elif correct_key:
+            if correct_key:
                 self.letter_labels[self.current_letter_index].config(bg='orange')
-                self.last_pressed_key_entry.config(bg='green')
+                self.last_pressed_key.config(bg='green')
             else:
                 self.letter_labels[self.current_letter_index].config(bg='red')
-                self.last_pressed_key_entry.config(bg='red')
+                self.last_pressed_key.config(bg='red')
+
+    def _process_button_release(self, *args):
+        self.last_pressed_key.config(bg='grey')
 
     def destroy_window(self):
         self.mainframe.unbind_all('<KeyPress>')
