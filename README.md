@@ -18,4 +18,4 @@ https://www.python.org/downloads/
 Список результатов сохраняется в файл **results.txt**. Для новой сессии можно удалить \ переименовать существующий файл. Новый файл будет создан автоматически
 
 # Tasks
-Add current keyboard layout on screen
+Add comments and private functions/variables
