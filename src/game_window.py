@@ -66,14 +66,13 @@ class GameWindow:
                 if key == '':
                     # just add space
                     key_color = 'black'
-                key = self.key_mapping.get(key, key)
-                label = tk.Label(row_frame, width=5, text=key, background=key_color, font=setups.LettersFont)
-                self.keys_to_label_mapping[key] = label
+                swapped_key = self.key_mapping.get(key, key)
+                label = tk.Label(row_frame, width=5, text=swapped_key, background=key_color, font=setups.LettersFont)
+                if key != '':
+                    self.keys_to_label_mapping[swapped_key] = label
                 label.pack(side=tk.LEFT, pady=5, padx=5)
 
         keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 100))
-
-        self.last_pressed_key: tk.Label | None = None
 
         self.mainframe.bind_all('<KeyPress>', self._process_button_press)
         self.mainframe.bind_all('<KeyRelease>', self._process_button_release)
@@ -95,7 +94,7 @@ class GameWindow:
         self.letter_labels[0].config(bg='orange')
 
     def _process_button_press(self, event):
-        if 65 <= event.keycode <= 90:
+        if 97 <= event.keysym_num <= 122:
             self.total_keys += 1
             if not self.game_started:
                 self.game_started = True
@@ -104,8 +103,6 @@ class GameWindow:
 
             key = event.char
             swapped_key = self.key_mapping.get(key, key)
-            # color pressed key
-            self.last_pressed_key = self.keys_to_label_mapping[swapped_key]
             correct_key = False
             if swapped_key == self.words[self.current_word_idx][self.current_letter_index]:
                 self.letter_labels[self.current_letter_index].config(bg='green')
@@ -119,13 +116,16 @@ class GameWindow:
                 self._render_current_word()
             if correct_key:
                 self.letter_labels[self.current_letter_index].config(bg='orange')
-                self.last_pressed_key.config(bg='green')
+                self.keys_to_label_mapping[swapped_key].config(bg='green')
             else:
                 self.letter_labels[self.current_letter_index].config(bg='red')
-                self.last_pressed_key.config(bg='red')
+                self.keys_to_label_mapping[swapped_key].config(bg='red')
 
-    def _process_button_release(self, *args):
-        self.last_pressed_key.config(bg='grey')
+    def _process_button_release(self, event):
+        key = event.char
+        swapped_key = self.key_mapping.get(key, key)
+        if key in self.keys_to_label_mapping:
+            self.keys_to_label_mapping[swapped_key].config(bg='grey')
 
     def destroy_window(self):
         self.mainframe.unbind_all('<KeyPress>')
