@@ -122,13 +122,14 @@ class GameWindow:
                 self.keys_to_label_mapping[swapped_key].config(bg='red')
 
     def _process_button_release(self, event):
-        key = event.char
-        swapped_key = self.key_mapping.get(key, key)
-        if key in self.keys_to_label_mapping:
+        if 97 <= event.keysym_num <= 122:
+            key = event.char
+            swapped_key = self.key_mapping.get(key, key)
             self.keys_to_label_mapping[swapped_key].config(bg='grey')
 
     def destroy_window(self):
         self.mainframe.unbind_all('<KeyPress>')
+        self.mainframe.unbind_all('<KeyRelease>')
         self.mainframe.destroy()
 
     def set_result(self, *args):
