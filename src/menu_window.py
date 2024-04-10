@@ -10,70 +10,71 @@ class MainMenu:
         self.set_user_callback = set_user_callback
         self.open_leaderboard_callback = open_leaderboard_callback
 
-        self.mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
-        self.mainframe.pack(fill=tk.BOTH, expand=1)
+        self._username = tk.StringVar(value='@telegram_tag')
 
-        self.username = tk.StringVar(value='@telegram_tag')
+        self._init_controls(root)
 
-        self.leaderboard_button = tk.Button(
-            self.mainframe,
+        root.mainloop()
+
+    def _init_controls(self, root: tk.Tk):
+        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
+        self._mainframe.pack(fill=tk.BOTH, expand=1)
+
+        tk.Button(
+            self._mainframe,
             text='Таблица лидеров',
-            command=self.open_leaderboard,
+            command=self._open_leaderboard,
             font=setups.ButtonsFont,
-        )
-        self.leaderboard_button.pack(side=tk.TOP, anchor=tk.NE)
+        ).pack(side=tk.TOP, anchor=tk.NE)
 
-        combined_frame = tk.Frame(self.mainframe, bg='#808080')
+        combined_frame = tk.Frame(self._mainframe, bg='#808080')
         combined_frame.pack(expand=1)
 
-        username_description = tk.Label(combined_frame, text='Введи свой телеграм-ник', font=setups.MainInfoFont)
-        username_description.pack(pady=5, padx=5)
-
-        username_description = tk.Label(
-            combined_frame, text='так мы сможем связаться с победителями', font=setups.AdditionalInfoFont
-        )
-        username_description.pack(pady=5, padx=5)
+        tk.Label(combined_frame, text='Введи свой телеграм-ник', font=setups.MainInfoFont).pack(pady=5, padx=5)
+        tk.Label(
+            combined_frame,
+            text='так мы сможем связаться с победителями',
+            font=setups.AdditionalInfoFont,
+        ).pack(pady=5, padx=5)
 
         # add placeholder instead of initial value
-        username_entry = tk.Entry(combined_frame, width=20, textvariable=self.username, font=setups.MainInfoFont)
-        username_entry.pack(pady=5, padx=5)
+        tk.Entry(combined_frame, width=20, textvariable=self._username, font=setups.MainInfoFont).pack(pady=5, padx=5)
 
-        start_button = tk.Button(
-            combined_frame, text="Начать игру", command=self.set_user_and_start, font=setups.ButtonsFont
-        )
-        start_button.pack(pady=5, padx=5)
+        tk.Button(
+            combined_frame,
+            text="Начать игру",
+            command=self._set_user_and_start,
+            font=setups.ButtonsFont,
+        ).pack(pady=5, padx=5)
 
         policy_text = tk.Label(
-            self.mainframe,
+            self._mainframe,
             text='Мы не будем передавать твои контакты рекрутерам, слать рассылки.\n'
             'Нам просто нужно как-то сообщить о результатах игры победителям.\n'
             'Но для этого нужно твое согласие:',
             font=setups.AdditionalInfoFont,
         )
         policy_link = tk.Label(
-            self.mainframe,
+            self._mainframe,
             text='Согласие на обработку персональных данных',
             fg='blue',
             font=setups.AdditionalInfoFont,
         )
-        policy_link.bind('<Button-1>', self.open_link)
+        policy_link.bind('<Button-1>', self._open_link)
         policy_link.pack(side=tk.BOTTOM)
         policy_text.pack(side=tk.BOTTOM)
 
         image = tk.PhotoImage(file='test.png')
-        self.mainframe.create_image(10, 10, anchor=tk.NW, image=image)
+        self._mainframe.create_image(10, 10, anchor=tk.NW, image=image)
 
-        username_entry.focus()
-        root.mainloop()
+    def _set_user_and_start(self, *args):
+        self._mainframe.destroy()
+        self.set_user_callback(self._username.get())
 
-    def set_user_and_start(self, *args):
-        self.mainframe.destroy()
-        self.set_user_callback(self.username.get())
-
-    def open_leaderboard(self, *args):
-        self.mainframe.destroy()
+    def _open_leaderboard(self, *args):
+        self._mainframe.destroy()
         self.open_leaderboard_callback()
 
-    def open_link(self, *args):
+    def _open_link(self, *args):
         link = 'https://engineer.yadro.com/wp-content/uploads/2024/03/privacy-policy.pdf'
         webbrowser.open(link)

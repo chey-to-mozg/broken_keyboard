@@ -3,6 +3,7 @@ from src.leaderboard_window import LeaderboardWindow
 from src.menu_window import MainMenu
 from src.result_window import ResultWindow
 from src.setups import ROOT
+from src import common
 
 
 class MainWindow:
@@ -48,16 +49,8 @@ class MainWindow:
             open_leaderboard_callback=self._open_leaderboard,
         )
 
-    def _open_result_window(self, result: int, correct_kyes: int, total_keys: int, finished_words: list[str]):
-        ResultWindow(
-            self._root,
-            self._username,
-            result,
-            correct_kyes,
-            total_keys,
-            finished_words,
-            menu_callback=self._open_menu,
-        )
+    def _open_result_window(self, results: common.GameResults, finished_words: list[str]):
+        ResultWindow(self._root, self._username, results, finished_words, menu_callback=self._open_menu)
 
     def _load_words(self):
         with open('words.txt', 'r') as f:
