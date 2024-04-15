@@ -49,11 +49,14 @@ class GameWindow:
         self._word_frame.pack(expand=1)
         self._letter_labels = []
 
+        self.label_image = tk.PhotoImage(file=common.get_image_path('letter_field'))
+
         for letter in self._words[self._current_word_idx]:
-            label = tk.Label(self._word_frame, text=letter, width=6, height=3, font=setups.LettersFont)
+            label = tk.Label(
+                self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont
+            )
             label.pack(side=tk.LEFT)
             self._letter_labels.append(label)
-        self._letter_labels[0].config(bg='orange')
 
     def _process_button_press(self, event):
         if 97 <= event.keysym_num <= 122:
@@ -67,7 +70,7 @@ class GameWindow:
             swapped_key = self._key_mapping.get(key, key)
             correct_key = False
             if swapped_key == self._words[self._current_word_idx][self._current_letter_index]:
-                self._letter_labels[self._current_letter_index].config(bg='green')
+                self._letter_labels[self._current_letter_index].config(fg='green')
                 self._current_letter_index += 1
                 correct_key = True
                 self._results.correct_keys += 1
@@ -77,61 +80,72 @@ class GameWindow:
                 self._results.total_words += 1
                 self._render_current_word()
             if correct_key:
-                self._letter_labels[self._current_letter_index].config(bg='orange')
-                self._keys_to_label_mapping[swapped_key].config(bg='green')
+                self._keys_to_label_mapping[swapped_key].config(image=self.key_correct_image)
             else:
-                self._letter_labels[self._current_letter_index].config(bg='red')
-                self._keys_to_label_mapping[swapped_key].config(bg='red')
+                self._letter_labels[self._current_letter_index].config(fg='red')
+                self._keys_to_label_mapping[swapped_key].config(image=self.key_wrong_image)
 
     def _process_button_release(self, event):
         if 97 <= event.keysym_num <= 122:
             key = event.char
             swapped_key = self._key_mapping.get(key, key)
-            self._keys_to_label_mapping[swapped_key].config(bg='grey')
+            self._keys_to_label_mapping[swapped_key].config(image=self.key_image)
 
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        tk.Button(
-            self._mainframe,
-            text='Главное меню',
-            command=self._interrupt_game,
-            font=setups.ButtonsFont,
-        ).pack(side=tk.TOP, anchor=tk.NE)
+        self.menu_button_image = tk.PhotoImage(file=common.get_image_path('menu_button'))
+        menu_button = tk.Label(self._mainframe, image=self.menu_button_image, borderwidth=0, highlightthickness=0)
+        menu_button.bind("<Button-1>", self._interrupt_game)
+        menu_button.pack(side=tk.TOP, anchor=tk.NE)
 
-        self._timer_value = tk.IntVar(value=self._timer_start)
+        self._timer_value = tk.StringVar(value='')
+        self._gen_timer_value(self._timer_start)
         self._time_of_start: float | None = None
         tk.Label(
             self._mainframe,
             width=7,
             textvariable=self._timer_value,
-            font=setups.MainInfoFont,
+            font=setups.LettersFont,
+            fg='#1E21AA',
         ).pack(side=tk.TOP, anchor=tk.N)
 
         self._word_frame: tk.Frame | None = None
         self._render_current_word()
 
         # keyboard layout from left to right, from top to bottom
-        keyboard_frame = tk.Frame(self._mainframe, background='black')
+        self._render_keyboard()
+
+    def _render_keyboard(self):
+        keyboard_frame = tk.Frame(self._mainframe, background=setups.BackgroundColor)
         keys_on_keyboard = [
             ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
             ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
             ['z', 'x', 'c', 'v', 'b', 'n', 'm', ''],
         ]
         self._keys_to_label_mapping = {}
+
+        self.key_image = tk.PhotoImage(file=common.get_image_path('key'))
+        self.key_correct_image = tk.PhotoImage(file=common.get_image_path('key_correct'))
+        self.key_wrong_image = tk.PhotoImage(file=common.get_image_path('key_wrong'))
+
         for row in keys_on_keyboard:
-            row_frame = tk.Frame(keyboard_frame, background='black')
+            row_frame = tk.Frame(keyboard_frame, background=setups.BackgroundColor)
             row_frame.pack()
             for key in row:
-                key_color = 'grey'
-                if key == '':
-                    # just add space
-                    key_color = 'black'
                 swapped_key = self._key_mapping.get(key, key)
-                label = tk.Label(row_frame, width=5, text=swapped_key, background=key_color, font=setups.LettersFont)
                 if key != '':
+                    label = tk.Label(
+                        row_frame,
+                        image=self.key_image,
+                        text=swapped_key,
+                        compound='center',
+                        font=setups.LettersFont,
+                    )
                     self._keys_to_label_mapping[swapped_key] = label
+                else:
+                    label = tk.Label(row_frame, text='', background=setups.BackgroundColor, width=10)
                 label.pack(side=tk.LEFT, pady=5, padx=5)
 
         keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 100))
@@ -149,11 +163,16 @@ class GameWindow:
         self._destroy_window()
         self._interrupt_game_callback()
 
+    def _gen_timer_value(self, seconds: int):
+        minutes = seconds // 60
+        seconds = seconds % 60
+        self._timer_value.set(f'{minutes}:{0 if seconds < 10 else ""}{seconds}')
+
     def _update_timer(self):
         diff = time.time() - self._time_of_start
         current_timer = int(self._timer_start - diff)
         if current_timer <= 0:
             self._set_result()
 
-        self._timer_value.set(current_timer)
+        self._gen_timer_value(current_timer)
         self._mainframe.after(100, self._update_timer)
