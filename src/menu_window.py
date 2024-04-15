@@ -1,7 +1,9 @@
 import tkinter as tk
+from tkinter import ttk
 import webbrowser
 from typing import Callable
 
+from src import common
 from src import setups
 
 
@@ -17,35 +19,57 @@ class MainMenu:
         root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
-        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
+        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor, highlightthickness=0)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        tk.Button(
-            self._mainframe,
-            text='Таблица лидеров',
-            command=self._open_leaderboard,
-            font=setups.ButtonsFont,
-        ).pack(side=tk.TOP, anchor=tk.NE)
+        self.table_button_image = tk.PhotoImage(file=common.get_image_path('table_button'))
+        table_button = tk.Label(self._mainframe, image=self.table_button_image, borderwidth=0, highlightthickness=0)
+        table_button.bind("<Button-1>", self._open_leaderboard)
+        table_button.pack(side=tk.TOP, anchor=tk.NE)
 
-        combined_frame = tk.Frame(self._mainframe, bg='#808080')
+        self.panel_with_controls_image = tk.PhotoImage(file=common.get_image_path('panel_with_controls'))
+        control_panel = tk.Canvas(
+            self._mainframe,
+            bg=setups.BackgroundColor,
+            height=self.panel_with_controls_image.height() + 10,
+            width=self.panel_with_controls_image.width() + 10,
+            highlightthickness=0,
+        )
+        control_panel.pack_propagate(False)
+        control_panel.create_image(5, 5, anchor=tk.NW, image=self.panel_with_controls_image)
+        control_panel.pack(expand=1)
+
+        combined_frame = tk.Frame(control_panel, bg=setups.PanelBackgroundColor)
         combined_frame.pack(expand=1)
 
-        tk.Label(combined_frame, text='Введи свой телеграм-ник', font=setups.MainInfoFont).pack(pady=5, padx=5)
         tk.Label(
             combined_frame,
-            text='так мы сможем связаться с победителями',
-            font=setups.AdditionalInfoFont,
+            text='Привет!',
+            font=setups.MainInfoFontBigBold,
+            background=setups.PanelBackgroundColor,
         ).pack(pady=5, padx=5)
-
-        # add placeholder instead of initial value
-        tk.Entry(combined_frame, width=20, textvariable=self._username, font=setups.MainInfoFont).pack(pady=5, padx=5)
-
-        tk.Button(
+        tk.Label(
             combined_frame,
-            text="Начать игру",
-            command=self._set_user_and_start,
-            font=setups.ButtonsFont,
-        ).pack(pady=5, padx=5)
+            text='Введи свой телеграм-ник,',
+            font=setups.MainInfoFont,
+            background=setups.PanelBackgroundColor,
+        ).pack(expand=1)
+        tk.Label(
+            combined_frame,
+            text='так мы сможем связаться с победителем',
+            font=setups.MainInfoFont,
+            background=setups.PanelBackgroundColor,
+        ).pack(expand=1)
+
+        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=5, width=20, height=10)
+        self.username_entity = tk.Entry(frame, textvariable=self._username, borderwidth=0, background=setups.BackgroundColor, font=setups.MainInfoFontBig, justify='center', width=20)
+        self.username_entity.pack(expand=1, pady=(10, 10))
+        frame.pack(expand=1, pady=(20, 20))
+
+        self.start_button_image = tk.PhotoImage(file=common.get_image_path('start_button'))
+        start_button = tk.Label(combined_frame, image=self.start_button_image, borderwidth=0, highlightthickness=0)
+        start_button.bind("<Button-1>", self._set_user_and_start)
+        start_button.pack(expand=1)
 
         policy_text = tk.Label(
             self._mainframe,
