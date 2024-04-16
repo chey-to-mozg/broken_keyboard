@@ -55,7 +55,7 @@ class MainWindow:
     def _load_words(self):
         with open('words.txt', 'r') as f:
             for row in f:
-                self._words.append(row.rstrip('\n'))
+                self._words.append(row.rstrip('\n').lower().replace(' ', ''))
 
     def _load_keys_mapping(self):
         with open('keyboard.txt', 'r') as f:
