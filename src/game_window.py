@@ -4,8 +4,7 @@ import time
 import tkinter as tk
 from typing import Callable
 
-from src import setups
-from src import common
+from src import common, setups
 
 
 class GameWindow:
@@ -41,64 +40,12 @@ class GameWindow:
 
         root.mainloop()
 
-    def _render_current_word(self):
-        if self._word_frame:
-            self._word_frame.destroy()
-
-        self._word_frame = tk.Frame(self._mainframe)
-        self._word_frame.pack(expand=1)
-        self._letter_labels = []
-
-        self.label_image = tk.PhotoImage(file=common.get_image_path('letter_field'))
-
-        for letter in self._words[self._current_word_idx]:
-            label = tk.Label(
-                self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont
-            )
-            label.pack(side=tk.LEFT)
-            self._letter_labels.append(label)
-
-    def _process_button_press(self, event):
-        if 97 <= event.keysym_num <= 122:
-            self._results.total_keys += 1
-            if not self._game_started:
-                self._game_started = True
-                self._time_of_start = time.time()
-                self._mainframe.after(100, self._update_timer)
-
-            key = event.char
-            swapped_key = self._key_mapping.get(key, key)
-            correct_key = False
-            if swapped_key == self._words[self._current_word_idx][self._current_letter_index]:
-                self._letter_labels[self._current_letter_index].config(fg='green')
-                self._current_letter_index += 1
-                correct_key = True
-                self._results.correct_keys += 1
-            if self._current_letter_index >= len(self._letter_labels):
-                self._current_letter_index = 0
-                self._current_word_idx += 1
-                self._results.total_words += 1
-                self._render_current_word()
-            if correct_key:
-                self._keys_to_label_mapping[swapped_key].config(image=self.key_correct_image)
-            else:
-                self._letter_labels[self._current_letter_index].config(fg='red')
-                self._keys_to_label_mapping[swapped_key].config(image=self.key_wrong_image)
-
-    def _process_button_release(self, event):
-        if 97 <= event.keysym_num <= 122:
-            key = event.char
-            swapped_key = self._key_mapping.get(key, key)
-            self._keys_to_label_mapping[swapped_key].config(image=self.key_image)
-
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Frame(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        self.menu_button_image = tk.PhotoImage(file=common.get_image_path('menu_button'))
-        menu_button = tk.Label(self._mainframe, image=self.menu_button_image, borderwidth=0, highlightthickness=0)
-        menu_button.bind("<Button-1>", self._interrupt_game)
-        menu_button.pack(side=tk.TOP, anchor=tk.NE)
+        button = common.gen_button(self._mainframe, 'menu_button', self._interrupt_game)
+        button.pack(side=tk.TOP, anchor=tk.NE)
 
         self._timer_value = tk.StringVar(value='')
         self._gen_timer_value(self._timer_start)
@@ -117,6 +64,23 @@ class GameWindow:
         # keyboard layout from left to right, from top to bottom
         self._render_keyboard()
 
+    def _render_current_word(self):
+        if self._word_frame:
+            self._word_frame.destroy()
+
+        self._word_frame = tk.Frame(self._mainframe)
+        self._word_frame.pack(expand=1)
+        self._letter_labels = []
+
+        self.label_image = common.load_image('letter_field')
+
+        for letter in self._words[self._current_word_idx]:
+            label = tk.Label(
+                self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont
+            )
+            label.pack(side=tk.LEFT)
+            self._letter_labels.append(label)
+
     def _render_keyboard(self):
         keyboard_frame = tk.Frame(self._mainframe, background=setups.BackgroundColor)
         keys_on_keyboard = [
@@ -126,9 +90,9 @@ class GameWindow:
         ]
         self._keys_to_label_mapping = {}
 
-        self.key_image = tk.PhotoImage(file=common.get_image_path('key'))
-        self.key_correct_image = tk.PhotoImage(file=common.get_image_path('key_correct'))
-        self.key_wrong_image = tk.PhotoImage(file=common.get_image_path('key_wrong'))
+        self.key_image = common.load_image('key')
+        self.key_correct_image = common.load_image('key_correct')
+        self.key_wrong_image = common.load_image('key_wrong')
 
         for row in keys_on_keyboard:
             row_frame = tk.Frame(keyboard_frame, background=setups.BackgroundColor)
@@ -149,6 +113,39 @@ class GameWindow:
                 label.pack(side=tk.LEFT, pady=5, padx=5)
 
         keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 100))
+
+    def _process_button_press(self, event):
+        if 97 <= event.keysym_num <= 122:
+            self._results.total_keys += 1
+            if not self._game_started:
+                self._game_started = True
+                self._time_of_start = time.time()
+                self._mainframe.after(100, self._update_timer)
+
+            key = event.char
+            swapped_key = self._key_mapping.get(key, key)
+            correct_key = False
+            if swapped_key == self._words[self._current_word_idx][self._current_letter_index]:
+                self._letter_labels[self._current_letter_index].config(fg=setups.GreenTextColor)
+                self._current_letter_index += 1
+                correct_key = True
+                self._results.correct_keys += 1
+            if self._current_letter_index >= len(self._letter_labels):
+                self._current_letter_index = 0
+                self._current_word_idx += 1
+                self._results.total_words += 1
+                self._render_current_word()
+            if correct_key:
+                self._keys_to_label_mapping[swapped_key].config(image=self.key_correct_image)
+            else:
+                self._letter_labels[self._current_letter_index].config(fg=setups.RedTextColor)
+                self._keys_to_label_mapping[swapped_key].config(image=self.key_wrong_image)
+
+    def _process_button_release(self, event):
+        if 97 <= event.keysym_num <= 122:
+            key = event.char
+            swapped_key = self._key_mapping.get(key, key)
+            self._keys_to_label_mapping[swapped_key].config(image=self.key_image)
 
     def _destroy_window(self):
         self._mainframe.unbind_all('<KeyPress>')

@@ -1,9 +1,9 @@
+from src import common
 from src.game_window import GameWindow
 from src.leaderboard_window import LeaderboardWindow
 from src.menu_window import MainMenu
 from src.result_window import ResultWindow
 from src.setups import ROOT
-from src import common
 
 
 class MainWindow:

@@ -1,9 +1,8 @@
 import tkinter as tk
 from typing import Callable
 
-from src import setups
+from src import common, setups
 from src.database import Database
-from src import common
 
 
 class ResultWindow:
@@ -31,22 +30,30 @@ class ResultWindow:
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        self.menu_button_image = tk.PhotoImage(file=common.get_image_path('menu_button'))
-        menu_button = tk.Label(self._mainframe, image=self.menu_button_image, borderwidth=0, highlightthickness=0)
-        menu_button.bind("<Button-1>", self._open_menu)
-        menu_button.pack(side=tk.TOP, anchor=tk.NE)
+        button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
+        button.pack(side=tk.TOP, anchor=tk.NE)
 
-        self.logo_image = tk.PhotoImage(file=common.get_image_path('logo'))
-        tk.Label(self._mainframe, image=self.logo_image, borderwidth=0, highlightthickness=0).pack(side=tk.TOP, anchor=tk.NW)
-        
+        # self.logo_image = tk.PhotoImage(file=common.get_image_path('logo'))
+        # tk.Label(self._mainframe, image=self.logo_image, borderwidth=0, highlightthickness=0).pack(side=tk.TOP, anchor=tk.NW)
+
         combined_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor)
-        combined_frame.pack(side=tk.LEFT, anchor=tk.NW, padx=10)
-        
-        tk.Label(combined_frame, text='ЗАВЕРШЕННЫЕ СЛОВА', font=setups.MainInfoFont, bg=setups.BackgroundColor, fg=setups.BlueTextColor).pack(pady=5)
-        for word in list_of_words:
-            tk.Label(combined_frame, text=word.upper(), font=setups.MainInfoFont, bg=setups.BackgroundColor).pack(anchor=tk.NW)
+        combined_frame.pack(side=tk.LEFT, anchor=tk.W, padx=10)
 
-        self.panel_with_results_image = tk.PhotoImage(file=common.get_image_path('panel_with_controls'))
+        if list_of_words:
+            tk.Label(
+                combined_frame,
+                text='ЗАВЕРШЕННЫЕ СЛОВА',
+                font=setups.ResultHeaderFont,
+                bg=setups.BackgroundColor,
+                fg=setups.BlueTextColor,
+            ).pack(pady=5)
+            for word in list_of_words:
+                tk.Label(combined_frame, text=word.upper(), font=setups.ResultWordFont, bg=setups.BackgroundColor).pack(
+                    anchor=tk.NW
+                )
+
+        # results
+        self.panel_with_results_image = common.load_image('panel_with_resulsts')
         combined_frame = tk.Canvas(
             self._mainframe,
             bg=setups.BackgroundColor,
@@ -58,22 +65,61 @@ class ResultWindow:
         combined_frame.create_image(5, 5, anchor=tk.NW, image=self.panel_with_results_image)
         combined_frame.pack(expand=1)
 
-        tk.Label(combined_frame, text=username, font=setups.MainInfoFontBigBold, bg=setups.PanelBackgroundColor,).pack(expand=1, pady=5, padx=5)
         tk.Label(
             combined_frame,
-            text=f'ЗАВЕРШЕННЫХ СЛОВ: {results.total_words}',
-            font=setups.MainInfoFont,
+            text=username,
+            font=setups.MainInfoFontBigBold,
             bg=setups.PanelBackgroundColor,
-        ).pack(expand=1, pady=5, padx=5)
+        ).pack(pady=(80, 0))
+
+        row_frame = tk.Frame(combined_frame)
         tk.Label(
-            combined_frame,
-            text=f'ВЕРНЫХ СИМВОЛОВ: {results.total_keys}',
-            font=setups.MainInfoFont,
+            row_frame,
+            text='ЗАВЕРШЕННЫХ СЛОВ: ',
+            font=setups.StatsFont,
             bg=setups.PanelBackgroundColor,
-        ).pack(expand=1, pady=5, padx=5)
+        ).pack(side=tk.LEFT)
+        tk.Label(
+            row_frame,
+            text=results.total_words,
+            font=setups.StatsFont,
+            bg=setups.PanelBackgroundColor,
+            fg=setups.BlueTextColor,
+        ).pack(side=tk.LEFT)
+        row_frame.pack(pady=(30, 0))
+
+        row_frame = tk.Frame(combined_frame)
+        tk.Label(
+            row_frame,
+            text='ВЕРНЫХ СИМВОЛОВ: ',
+            font=setups.StatsFont,
+            bg=setups.PanelBackgroundColor,
+        ).pack(side=tk.LEFT)
+        tk.Label(
+            row_frame,
+            text=results.correct_keys,
+            font=setups.StatsFont,
+            bg=setups.PanelBackgroundColor,
+            fg=setups.BlueTextColor,
+        ).pack(side=tk.LEFT)
+        row_frame.pack(pady=(30, 0))
 
         accuracy = int(results.correct_keys / results.total_keys * 100)  # in %
-        tk.Label(combined_frame, text=f'ТОЧНОСТЬ: {accuracy} %', font=setups.MainInfoFont, bg=setups.PanelBackgroundColor,).pack(expand=1, pady=5, padx=5)
+        row_frame = tk.Frame(combined_frame)
+        tk.Label(
+            row_frame,
+            text='ТОЧНОСТЬ: ',
+            font=setups.StatsFont,
+            bg=setups.PanelBackgroundColor,
+        ).pack(side=tk.LEFT)
+        tk.Label(
+            row_frame,
+            text=f'{accuracy}%',
+            font=setups.StatsFont,
+            bg=setups.PanelBackgroundColor,
+            fg=setups.BlueTextColor,
+        ).pack(side=tk.LEFT)
+        row_frame.pack(pady=(30, 0))
 
     def _open_menu(self, *args):
         self._mainframe.destroy()

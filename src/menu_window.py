@@ -1,10 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
 import webbrowser
+from tkinter import ttk
 from typing import Callable
 
-from src import common
-from src import setups
+from src import common, setups
 
 
 class MainMenu:
@@ -22,12 +21,10 @@ class MainMenu:
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor, highlightthickness=0)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        self.table_button_image = tk.PhotoImage(file=common.get_image_path('table_button'))
-        table_button = tk.Label(self._mainframe, image=self.table_button_image, borderwidth=0, highlightthickness=0)
-        table_button.bind("<Button-1>", self._open_leaderboard)
-        table_button.pack(side=tk.TOP, anchor=tk.NE)
+        button = common.gen_button(self._mainframe, 'table_button', self._open_leaderboard)
+        button.pack(side=tk.TOP, anchor=tk.NE)
 
-        self.panel_with_controls_image = tk.PhotoImage(file=common.get_image_path('panel_with_controls'))
+        self.panel_with_controls_image = common.load_image('panel_with_controls')
         control_panel = tk.Canvas(
             self._mainframe,
             bg=setups.BackgroundColor,
@@ -62,14 +59,20 @@ class MainMenu:
         ).pack(expand=1)
 
         frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=5, width=20, height=10)
-        self.username_entity = tk.Entry(frame, textvariable=self._username, borderwidth=0, background=setups.BackgroundColor, font=setups.MainInfoFontBig, justify='center', width=20)
+        self.username_entity = tk.Entry(
+            frame,
+            textvariable=self._username,
+            borderwidth=0,
+            background=setups.BackgroundColor,
+            font=setups.MainInfoFontBig,
+            justify='center',
+            width=20,
+        )
         self.username_entity.pack(expand=1, pady=(10, 10))
         frame.pack(expand=1, pady=(20, 20))
 
-        self.start_button_image = tk.PhotoImage(file=common.get_image_path('start_button'))
-        start_button = tk.Label(combined_frame, image=self.start_button_image, borderwidth=0, highlightthickness=0)
-        start_button.bind("<Button-1>", self._set_user_and_start)
-        start_button.pack(expand=1)
+        button = common.gen_button(combined_frame, 'start_button', self._set_user_and_start)
+        button.pack(expand=1)
 
         policy_text = tk.Label(
             self._mainframe,
