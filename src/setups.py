@@ -6,6 +6,7 @@ ROOT = tk.Tk()
 
 BackgroundColor = '#F0F2F8'
 PanelBackgroundColor = '#FFFFFF'
+BlueTextColor = 'blue'
 
 ButtonsFont = font.Font(family='Courier', size=12, weight='bold')
 MainInfoFont = font.Font(family='Courier', size=12)
@@ -20,3 +21,9 @@ text_entity_style = ttk.Style()
 text_entity_style.image = text_entity_image
 text_entity_style.element_create("RoundedFrame", "image", text_entity_image, border=16, sticky="nsew")
 text_entity_style.layout("RoundedFrame", [("RoundedFrame", {"sticky": "nsew"})])
+
+results_entity_image = tk.PhotoImage(file=common.get_image_path('results_body'))
+results_entity_style = ttk.Style()
+results_entity_style.image = results_entity_image
+results_entity_style.element_create("ResultsBody", "image", results_entity_image, border=16, sticky="nsew")
+results_entity_style.layout("ResultsBody", [("ResultsBody", {"sticky": "nsew"})])

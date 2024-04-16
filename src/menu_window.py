@@ -77,12 +77,14 @@ class MainMenu:
             'Нам просто нужно как-то сообщить о результатах игры победителям.\n'
             'Но для этого нужно твое согласие:',
             font=setups.AdditionalInfoFont,
+            bg=setups.BackgroundColor,
         )
         policy_link = tk.Label(
             self._mainframe,
             text='Согласие на обработку персональных данных',
-            fg='blue',
+            fg=setups.BlueTextColor,
             font=setups.AdditionalInfoFont,
+            bg=setups.BackgroundColor,
         )
         policy_link.bind('<Button-1>', self._open_link)
         policy_link.pack(side=tk.BOTTOM)
