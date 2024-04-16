@@ -5,7 +5,7 @@ Broken keyboard game
 1. Для запуска нужен python 3.10+  
 https://www.python.org/downloads/
 2. Скачиваем\клонируем данный репозиторий  
-**git clone https://github.com/chey-to-mozg/broken_keyboard.git**
+**git clone ssh://git@b.yadro.com:7999/~d.logashov/broken_keyboard.git**
 3. Переходим в папку с игрой  
 **cd broken_keyboard**
 4. Запускаем игру  
