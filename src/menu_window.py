@@ -1,8 +1,9 @@
 import tkinter as tk
 import webbrowser
+from tkinter import ttk
 from typing import Callable
 
-from src import setups
+from src import common, setups
 
 
 class MainMenu:
@@ -17,35 +18,61 @@ class MainMenu:
         root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
-        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
+        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor, highlightthickness=0)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        tk.Button(
-            self._mainframe,
-            text='Таблица лидеров',
-            command=self._open_leaderboard,
-            font=setups.ButtonsFont,
-        ).pack(side=tk.TOP, anchor=tk.NE)
+        button = common.gen_button(self._mainframe, 'table_button', self._open_leaderboard)
+        button.pack(side=tk.TOP, anchor=tk.NE)
 
-        combined_frame = tk.Frame(self._mainframe, bg='#808080')
+        self.panel_with_controls_image = common.load_image('panel_with_controls')
+        control_panel = tk.Canvas(
+            self._mainframe,
+            bg=setups.BackgroundColor,
+            height=self.panel_with_controls_image.height() + 10,
+            width=self.panel_with_controls_image.width() + 10,
+            highlightthickness=0,
+        )
+        control_panel.pack_propagate(False)
+        control_panel.create_image(5, 5, anchor=tk.NW, image=self.panel_with_controls_image)
+        control_panel.pack(expand=1)
+
+        combined_frame = tk.Frame(control_panel, bg=setups.PanelBackgroundColor)
         combined_frame.pack(expand=1)
 
-        tk.Label(combined_frame, text='Введи свой телеграм-ник', font=setups.MainInfoFont).pack(pady=5, padx=5)
         tk.Label(
             combined_frame,
-            text='так мы сможем связаться с победителями',
-            font=setups.AdditionalInfoFont,
+            text='Привет!',
+            font=setups.MainInfoFontBigBold,
+            background=setups.PanelBackgroundColor,
         ).pack(pady=5, padx=5)
-
-        # add placeholder instead of initial value
-        tk.Entry(combined_frame, width=20, textvariable=self._username, font=setups.MainInfoFont).pack(pady=5, padx=5)
-
-        tk.Button(
+        tk.Label(
             combined_frame,
-            text="Начать игру",
-            command=self._set_user_and_start,
-            font=setups.ButtonsFont,
-        ).pack(pady=5, padx=5)
+            text='Введи свой телеграм-ник,',
+            font=setups.MainInfoFont,
+            background=setups.PanelBackgroundColor,
+        ).pack(expand=1)
+        tk.Label(
+            combined_frame,
+            text='так мы сможем связаться с победителем',
+            font=setups.MainInfoFont,
+            background=setups.PanelBackgroundColor,
+        ).pack(expand=1)
+
+        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=5, width=20, height=10)
+        self.username_entity = tk.Entry(
+            frame,
+            textvariable=self._username,
+            borderwidth=0,
+            background=setups.BackgroundColor,
+            font=setups.MainInfoFontBig,
+            justify='center',
+            width=20,
+        )
+        self.username_entity.pack(expand=1, pady=(10, 10))
+        frame.pack(expand=1, pady=(20, 20))
+
+        button = common.gen_button(combined_frame, 'start_button', self._set_user_and_start)
+        button.pack(expand=1)
 
         policy_text = tk.Label(
             self._mainframe,
@@ -53,12 +80,14 @@ class MainMenu:
             'Нам просто нужно как-то сообщить о результатах игры победителям.\n'
             'Но для этого нужно твое согласие:',
             font=setups.AdditionalInfoFont,
+            bg=setups.BackgroundColor,
         )
         policy_link = tk.Label(
             self._mainframe,
             text='Согласие на обработку персональных данных',
-            fg='blue',
+            fg=setups.BlueTextColor,
             font=setups.AdditionalInfoFont,
+            bg=setups.BackgroundColor,
         )
         policy_link.bind('<Button-1>', self._open_link)
         policy_link.pack(side=tk.BOTTOM)

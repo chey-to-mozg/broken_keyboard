@@ -3,3 +3,5 @@
 result.txt
 src/test_class.py
 apply_formatters.sh
+template/
+test_main.py
