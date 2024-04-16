@@ -1,10 +1,84 @@
-programmer
-command
-linux
-windows
+bug 
+feature
+requirements
+automation
+manual testing
+priority
+black box
+grey box
+white box
+testcase
+Selenium
+WebDriver
+Framework
+Assertions
+Integration
+Functional
+Regression
+Performance
+Virtual Environment
+Debugging
+Logging
+Parameterization
+Continuous Integration
+Continuous Deployment
+Cross-Browser Testing
+Behavior-Driven Development
+Test-Driven Development
+Page Object Model
+Continuous Testing
+Agile Methodology
+Performance Testing
+Selenium Grid
+Fixtures
+Robot Framework
+Agile
+authentication
+capacity
+checklist
+compatibility
+component
+context
+coverage
+dashboard
+defect
+emulator
+encryption
+environment
+failure
+fault
+functional
+hyperlink
+input
+integration
+interface
+level
+localization
+maintainability
+maintenance
+master
+measurement
+metric
+monitoring
+performance
+playtest
+postcondition
+precondition
+priority
+product
+quality
+risk
+random
+regression
+requirement
+retrospective
+review
+security
+severity
+simulator
+spike
+traceability
+usability
 user
-telecom
-yadro
-task
-job
-Test Word
+validation
+verification
