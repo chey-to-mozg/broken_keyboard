@@ -13,6 +13,8 @@ class Database:
         else:
             with open(self._results_file, 'r') as f:
                 for row in f:
+                    if not row:
+                        continue
                     keys = row.rstrip('\n').split(':')
                     metrics = [int(val) for val in keys[1].split(',')]
                     self.results[keys[0]] = metrics

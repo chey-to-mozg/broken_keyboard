@@ -18,18 +18,19 @@ class LeaderboardWindow:
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
-        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
-
         db = Database()
+
+        table_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor)
+        table_frame.pack(side=tk.LEFT, anchor=tk.CENTER, padx=(729, 0))
+
         self.results_header_image = common.load_image('results_header')
-        header_label = tk.Label(self._mainframe, image=self.results_header_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
-        header_label.pack(side=tk.TOP, pady=(110, 0))
+        header_label = tk.Label(table_frame, image=self.results_header_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
+        header_label.pack(side=tk.TOP)
 
         self.results_body_image = common.load_image('results_body')
         self.results_body_image = self.results_body_image.zoom(1, len(db.results) + 2)
         results_frame = tk.Canvas(
-            self._mainframe,
+            table_frame,
             bg=setups.BackgroundColor,
             height=self.results_body_image.height(),
             width=self.results_body_image.width() + 10,
@@ -42,8 +43,6 @@ class LeaderboardWindow:
         tk.Label(results_frame, text='ТАБЛИЦА ЛИДЕРОВ:', font=setups.MainInfoFontBold, bg=setups.PanelBackgroundColor).pack(
             side=tk.TOP
         )
-
-
 
         # make array and add loop to row generation
         position_header = 'Позиция'
@@ -76,8 +75,11 @@ class LeaderboardWindow:
         results_frame.pack(side=tk.TOP)
 
         self.results_footer_image = common.load_image('results_footer')
-        footer_label = tk.Label(self._mainframe, image=self.results_footer_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
+        footer_label = tk.Label(table_frame, image=self.results_footer_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
         footer_label.pack(side=tk.TOP)
+
+        button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
+        button.pack(side=tk.RIGHT, anchor=tk.NE, padx=60, pady=60)
 
         self.logo_image = common.load_image('logo')
         self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
