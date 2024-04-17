@@ -43,19 +43,19 @@ class MainMenu:
             combined_frame,
             text='Привет!',
             font=setups.MainInfoFontBigBold,
-            background=setups.PanelBackgroundColor,
+            bg=setups.PanelBackgroundColor,
         ).pack(pady=(40, 16))
         tk.Label(
             combined_frame,
             text='Введи свой телеграм-ник,',
             font=setups.MainInfoFont,
-            background=setups.PanelBackgroundColor,
+            bg=setups.PanelBackgroundColor,
         ).pack(pady=(0, 1))
         tk.Label(
             combined_frame,
             text='так мы сможем связаться с победителем',
             font=setups.MainInfoFont,
-            background=setups.PanelBackgroundColor,
+            bg=setups.PanelBackgroundColor,
         ).pack(pady=(0, 30))
 
         frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=2, width=25, height=5)
@@ -63,12 +63,14 @@ class MainMenu:
             frame,
             textvariable=self._username,
             borderwidth=0,
-            background=setups.BackgroundColor,
+            bg=setups.BackgroundColor,
+            fg=setups.GrayTextColor,
             font=setups.MainInfoFontBig,
             justify='center',
             width=21,
         )
         self.username_entity.pack(expand=1, pady=(10, 10))
+        self.username_entity.bind('<Button-1>', self._clear_username_entity)
         frame.pack(pady=(0, 30))
 
         button = common.gen_button(combined_frame, 'start_button', self._set_user_and_start)
@@ -102,6 +104,11 @@ class MainMenu:
     def _set_user_and_start(self, *args):
         self._mainframe.destroy()
         self.set_user_callback(self._username.get())
+
+    def _clear_username_entity(self, *args):
+        if self._username.get() == '@telegram_tag':
+            self.username_entity.config(fg='black')
+            self._username.set('')
 
     def _open_leaderboard(self, *args):
         self._mainframe.destroy()

@@ -10,6 +10,7 @@ PanelBackgroundColor = '#FFFFFF'
 BlueTextColor = '#1E21AA'
 GreenTextColor = '#00B27F'
 RedTextColor = '#D60020'
+GrayTextColor = '#808080'
 
 ButtonsFont = font.Font(family='Proxima Nova', size=12, weight='bold')
 MainInfoFont = font.Font(family='Proxima Nova', size=12)
