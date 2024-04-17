@@ -9,13 +9,13 @@ from src import common, setups
 
 class GameWindow:
     def __init__(
-        self,
-        root: tk.Tk,
-        words: list[str],
-        key_mapping: dict[str, str],
-        timer_init: int,
-        interrupt_game_callback: Callable,
-        set_results_callback: Callable,
+            self,
+            root: tk.Tk,
+            words: list[str],
+            key_mapping: dict[str, str],
+            timer_init: int,
+            interrupt_game_callback: Callable,
+            set_results_callback: Callable,
     ):
         self._results = common.GameResults()
 
@@ -41,11 +41,11 @@ class GameWindow:
         root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
-        self._mainframe = tk.Frame(root, bg=setups.BackgroundColor)
+        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
         button = common.gen_button(self._mainframe, 'menu_button', self._interrupt_game)
-        button.pack(side=tk.TOP, anchor=tk.NE)
+        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
 
         self._timer_value = tk.StringVar(value='')
         self._gen_timer_value(self._timer_start)
@@ -55,8 +55,9 @@ class GameWindow:
             width=7,
             textvariable=self._timer_value,
             font=setups.LettersFont,
+            bg=setups.BackgroundColor,
             fg='#1E21AA',
-        ).pack(side=tk.TOP, anchor=tk.N)
+        ).pack(side=tk.TOP)
 
         self._word_frame: tk.Frame | None = None
         self._render_current_word()
@@ -64,25 +65,29 @@ class GameWindow:
         # keyboard layout from left to right, from top to bottom
         self._render_keyboard()
 
+        self.logo_image = common.load_image('logo')
+        self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
+
     def _render_current_word(self):
         if self._word_frame:
             self._word_frame.destroy()
 
-        self._word_frame = tk.Frame(self._mainframe)
-        self._word_frame.pack(expand=1)
+        self._word_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor,)
+        self._word_frame.pack(side=tk.TOP, pady=(120, 0))
         self._letter_labels = []
 
         self.label_image = common.load_image('letter_field')
 
         for letter in self._words[self._current_word_idx]:
             label = tk.Label(
-                self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont
+                self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont,
+                bg=setups.BackgroundColor,
             )
-            label.pack(side=tk.LEFT)
+            label.pack(side=tk.LEFT, padx=5)
             self._letter_labels.append(label)
 
     def _render_keyboard(self):
-        keyboard_frame = tk.Frame(self._mainframe, background=setups.BackgroundColor)
+        keyboard_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor)
         keys_on_keyboard = [
             ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
             ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
@@ -95,7 +100,7 @@ class GameWindow:
         self.key_wrong_image = common.load_image('key_wrong')
 
         for row in keys_on_keyboard:
-            row_frame = tk.Frame(keyboard_frame, background=setups.BackgroundColor)
+            row_frame = tk.Frame(keyboard_frame, bg=setups.BackgroundColor)
             row_frame.pack()
             for key in row:
                 swapped_key = self._key_mapping.get(key, key)
@@ -106,13 +111,14 @@ class GameWindow:
                         text=swapped_key,
                         compound='center',
                         font=setups.LettersFont,
+                        bg=setups.BackgroundColor,
                     )
                     self._keys_to_label_mapping[swapped_key] = label
                 else:
-                    label = tk.Label(row_frame, text='', background=setups.BackgroundColor, width=10)
-                label.pack(side=tk.LEFT, pady=5, padx=5)
+                    label = tk.Label(row_frame, text='', bg=setups.BackgroundColor, width=10)
+                label.pack(side=tk.LEFT)
 
-        keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 100))
+        keyboard_frame.pack(side=tk.BOTTOM, pady=(0, 160))
 
     def _process_button_press(self, event):
         if 97 <= event.keysym_num <= 122:

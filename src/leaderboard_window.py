@@ -15,16 +15,16 @@ class LeaderboardWindow:
         root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
-        self._mainframe = tk.Frame(root, bg=setups.BackgroundColor)
+        self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
         button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
-        button.pack(side=tk.TOP, anchor=tk.NE)
+        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
 
         db = Database()
         self.results_header_image = common.load_image('results_header')
-        header_label = tk.Label(self._mainframe, image=self.results_header_image, borderwidth=0, highlightthickness=0)
-        header_label.pack(side=tk.TOP)
+        header_label = tk.Label(self._mainframe, image=self.results_header_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
+        header_label.pack(side=tk.TOP, pady=(110, 0))
 
         self.results_body_image = common.load_image('results_body')
         self.results_body_image = self.results_body_image.zoom(1, len(db.results) + 2)
@@ -39,45 +39,51 @@ class LeaderboardWindow:
         results_frame.pack_propagate(False)
         results_frame.create_image(5, 0, anchor=tk.NW, image=self.results_body_image)
 
-        tk.Label(results_frame, text='Результаты:', font=setups.MainInfoFont, bg=setups.PanelBackgroundColor).pack(
+        tk.Label(results_frame, text='ТАБЛИЦА ЛИДЕРОВ:', font=setups.MainInfoFontBold, bg=setups.PanelBackgroundColor).pack(
             side=tk.TOP
         )
-        max_tag_len = 0
-        for tag in db.results.keys():
-            if len(tag) > max_tag_len:
-                max_tag_len = len(tag)
+
+
 
         # make array and add loop to row generation
-        position_header = 'Позиция  '
+        position_header = 'Позиция'
         tag_header = 'Телеграм тэг'
-        tag_header = f'{tag_header}{self._spaces(max_tag_len - len(tag_header))}  '
-        result_header = 'Верных слов  '
-        total_keys_header = 'Верных символов  '
+        result_header = 'Верных слов'
+        total_keys_header = 'Верных символов'
         accuracy_header = 'Точность ввода'
-        tk.Label(
-            results_frame,
-            text=position_header + tag_header,  # + result_header + total_keys_header + accuracy_header,
-            font=setups.MainInfoFont,
-            bg=setups.PanelBackgroundColor,
-        ).pack(side=tk.TOP)
+        position_combined_frame = tk.Frame(results_frame, bg=setups.PanelBackgroundColor)
+        tag_combined_frame = tk.Frame(results_frame, bg=setups.PanelBackgroundColor)
+        result_combined_frame = tk.Frame(results_frame, bg=setups.PanelBackgroundColor)
+        headers = [position_header, tag_header, result_header]
+        frames = [position_combined_frame, tag_combined_frame, result_combined_frame]
+        for header, frame in zip(headers, frames):
+            tk.Label(frame, text=header, bg=setups.PanelBackgroundColor, font=setups.MainInfoFont).pack(side=tk.TOP)
 
         # generate table with correct sizes
         for res_idx, (name, result) in enumerate(db.results.items()):
             position = f'{res_idx + 1}.'
             row = []
-            headers = [position_header, tag_header]  # , result_header, total_keys_header, accuracy_header]
-            row_values = [position, name]  # , str(result[0]), str(result[1]), str(result[2])]
-            for col_header, col_value in zip(headers, row_values):
-                row.append(f'{col_value}{self._spaces(len(col_header) - len(col_value))}')
-            tk.Label(results_frame, text=''.join(row), font=setups.MainInfoFont, bg=setups.PanelBackgroundColor).pack(
-                side=tk.TOP
-            )
+            row_values = [position, name, str(result[0])]  #, str(result[1]), str(result[2])]
+            for value, frame in zip(row_values, frames):
+                tk.Label(frame, text=value, font=setups.MainInfoFont, bg=setups.PanelBackgroundColor).pack(
+                    side=tk.TOP
+                )
+
+        position_combined_frame.pack(side=tk.LEFT, expand=1, anchor=tk.E)
+        tag_combined_frame.pack(side=tk.LEFT, expand=1)
+        result_combined_frame.pack(side=tk.LEFT, expand=1, anchor=tk.W)
 
         results_frame.pack(side=tk.TOP)
 
         self.results_footer_image = common.load_image('results_footer')
-        footer_label = tk.Label(self._mainframe, image=self.results_footer_image, borderwidth=0, highlightthickness=0)
+        footer_label = tk.Label(self._mainframe, image=self.results_footer_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
         footer_label.pack(side=tk.TOP)
+
+        self.logo_image = common.load_image('logo')
+        self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
+
+        self.bug = common.load_image('bug_say')
+        self._mainframe.create_image(350, 400, anchor=tk.NW, image=self.bug)
 
     def _spaces(self, num: int):
         if num <= 0:

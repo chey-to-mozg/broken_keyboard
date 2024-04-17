@@ -22,7 +22,7 @@ class MainMenu:
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
         button = common.gen_button(self._mainframe, 'table_button', self._open_leaderboard)
-        button.pack(side=tk.TOP, anchor=tk.NE)
+        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
 
         self.panel_with_controls_image = common.load_image('panel_with_controls')
         control_panel = tk.Canvas(
@@ -37,28 +37,28 @@ class MainMenu:
         control_panel.pack(expand=1)
 
         combined_frame = tk.Frame(control_panel, bg=setups.PanelBackgroundColor)
-        combined_frame.pack(expand=1)
+        combined_frame.pack(pady=(30, 0))
 
         tk.Label(
             combined_frame,
             text='Привет!',
             font=setups.MainInfoFontBigBold,
             background=setups.PanelBackgroundColor,
-        ).pack(pady=5, padx=5)
+        ).pack(pady=(40, 16))
         tk.Label(
             combined_frame,
             text='Введи свой телеграм-ник,',
             font=setups.MainInfoFont,
             background=setups.PanelBackgroundColor,
-        ).pack(expand=1)
+        ).pack(pady=(0, 1))
         tk.Label(
             combined_frame,
             text='так мы сможем связаться с победителем',
             font=setups.MainInfoFont,
             background=setups.PanelBackgroundColor,
-        ).pack(expand=1)
+        ).pack(pady=(0, 30))
 
-        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=5, width=20, height=10)
+        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=2, width=25, height=5)
         self.username_entity = tk.Entry(
             frame,
             textvariable=self._username,
@@ -66,13 +66,13 @@ class MainMenu:
             background=setups.BackgroundColor,
             font=setups.MainInfoFontBig,
             justify='center',
-            width=20,
+            width=21,
         )
         self.username_entity.pack(expand=1, pady=(10, 10))
-        frame.pack(expand=1, pady=(20, 20))
+        frame.pack(pady=(0, 30))
 
         button = common.gen_button(combined_frame, 'start_button', self._set_user_and_start)
-        button.pack(expand=1)
+        button.pack()
 
         policy_text = tk.Label(
             self._mainframe,
@@ -93,8 +93,11 @@ class MainMenu:
         policy_link.pack(side=tk.BOTTOM)
         policy_text.pack(side=tk.BOTTOM)
 
-        image = tk.PhotoImage(file='test.png')
-        self._mainframe.create_image(10, 10, anchor=tk.NW, image=image)
+        self.logo_image = common.load_image('logo')
+        self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
+
+        self.bug = common.load_image('bug')
+        self._mainframe.create_image(94, 645, anchor=tk.NW, image=self.bug)
 
     def _set_user_and_start(self, *args):
         self._mainframe.destroy()

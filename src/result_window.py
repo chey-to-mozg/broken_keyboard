@@ -30,30 +30,23 @@ class ResultWindow:
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
-        button.pack(side=tk.TOP, anchor=tk.NE)
-
-        # self.logo_image = tk.PhotoImage(file=common.get_image_path('logo'))
-        # tk.Label(self._mainframe, image=self.logo_image, borderwidth=0, highlightthickness=0).pack(side=tk.TOP, anchor=tk.NW)
-
         combined_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor)
-        combined_frame.pack(side=tk.LEFT, anchor=tk.W, padx=10)
+        combined_frame.pack(side=tk.LEFT, anchor=tk.NW, padx=(103, 0), pady=(180, 0))
 
-        if list_of_words:
-            tk.Label(
-                combined_frame,
-                text='ЗАВЕРШЕННЫЕ СЛОВА',
-                font=setups.ResultHeaderFont,
-                bg=setups.BackgroundColor,
-                fg=setups.BlueTextColor,
-            ).pack(pady=5)
-            for word in list_of_words:
-                tk.Label(combined_frame, text=word.upper(), font=setups.ResultWordFont, bg=setups.BackgroundColor).pack(
-                    anchor=tk.NW
-                )
+        tk.Label(
+            combined_frame,
+            text='ЗАВЕРШЕННЫЕ СЛОВА',
+            font=setups.ResultHeaderFont,
+            bg=setups.BackgroundColor,
+            fg=setups.BlueTextColor,
+        ).pack(anchor=tk.NW, pady=5)
+        for word in list_of_words:
+            tk.Label(combined_frame, text=word.upper(), font=setups.ResultWordFont, bg=setups.BackgroundColor).pack(
+                anchor=tk.NW, pady=5
+            )
 
         # results
-        self.panel_with_results_image = common.load_image('panel_with_resulsts')
+        self.panel_with_results_image = common.load_image('panel_with_results')
         combined_frame = tk.Canvas(
             self._mainframe,
             bg=setups.BackgroundColor,
@@ -63,7 +56,7 @@ class ResultWindow:
         )
         combined_frame.pack_propagate(False)
         combined_frame.create_image(5, 5, anchor=tk.NW, image=self.panel_with_results_image)
-        combined_frame.pack(expand=1)
+        combined_frame.pack(side=tk.LEFT, anchor=tk.N, padx=(340, 0), pady=(385, 0))
 
         tk.Label(
             combined_frame,
@@ -82,7 +75,7 @@ class ResultWindow:
         tk.Label(
             row_frame,
             text=results.total_words,
-            font=setups.StatsFont,
+            font=setups.StatsFontBold,
             bg=setups.PanelBackgroundColor,
             fg=setups.BlueTextColor,
         ).pack(side=tk.LEFT)
@@ -98,7 +91,7 @@ class ResultWindow:
         tk.Label(
             row_frame,
             text=results.correct_keys,
-            font=setups.StatsFont,
+            font=setups.StatsFontBold,
             bg=setups.PanelBackgroundColor,
             fg=setups.BlueTextColor,
         ).pack(side=tk.LEFT)
@@ -115,11 +108,20 @@ class ResultWindow:
         tk.Label(
             row_frame,
             text=f'{accuracy}%',
-            font=setups.StatsFont,
+            font=setups.StatsFontBold,
             bg=setups.PanelBackgroundColor,
             fg=setups.BlueTextColor,
-        ).pack(side=tk.LEFT)
+        ).pack(side=tk.RIGHT)
         row_frame.pack(pady=(30, 0))
+
+        button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)
+        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
+
+        self.logo_image = common.load_image('logo')
+        self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
+
+        self.bug = common.load_image('bug_say')
+        self._mainframe.create_image(450, 400, anchor=tk.NW, image=self.bug)
 
     def _open_menu(self, *args):
         self._mainframe.destroy()
