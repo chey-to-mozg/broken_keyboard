@@ -11,16 +11,18 @@ BlueTextColor = '#1E21AA'
 GreenTextColor = '#00B27F'
 RedTextColor = '#D60020'
 
-ButtonsFont = font.Font(family='Courier', size=12, weight='bold')
-MainInfoFont = font.Font(family='Courier', size=12)
-MainInfoFontBig = font.Font(family='Courier', size=20)
-MainInfoFontBigBold = font.Font(family='Courier', size=32, weight='bold')
-AdditionalInfoFont = font.Font(family='Courier', size=9)
-LettersFont = font.Font(family='Courier', size=28, weight='bold')
-TimerFont = font.Font(family='Courier', size=40, weight='bold')
-ResultHeaderFont = font.Font(family='Courier', size=20, weight='bold')
-ResultWordFont = font.Font(family='Courier', size=16)
-StatsFont = font.Font(family='Courier', size=14)
+ButtonsFont = font.Font(family='Proxima Nova', size=12, weight='bold')
+MainInfoFont = font.Font(family='Proxima Nova', size=12)
+MainInfoFontBold = font.Font(family='Proxima Nova', size=12, weight='bold')
+MainInfoFontBig = font.Font(family='Proxima Nova', size=20)
+MainInfoFontBigBold = font.Font(family='Proxima Nova', size=28, weight='bold')
+AdditionalInfoFont = font.Font(family='Proxima Nova', size=10)
+LettersFont = font.Font(family='Proxima Nova', size=28, weight='bold')
+TimerFont = font.Font(family='Proxima Nova', size=40, weight='bold')
+ResultHeaderFont = font.Font(family='Proxima Nova', size=20, weight='bold')
+ResultWordFont = font.Font(family='Proxima Nova', size=16)
+StatsFont = font.Font(family='Proxima Nova', size=14)
+StatsFontBold = font.Font(family='Proxima Nova', size=14, weight='bold')
 
 text_entity_image = tk.PhotoImage(file=common.get_image_path('text_entity'))
 text_entity_style = ttk.Style()
