@@ -45,3 +45,12 @@ class Database:
         results = copy.copy(results[1])
         results[-1] = 1 / results[-1]
         return results
+
+    def get_table_results(self, number_of_results: int = 20):
+        table_results = {}
+        for idx, (name, res) in enumerate(self.results.items()):
+            if idx >= number_of_results:
+                break
+            table_results[name] = res
+        return table_results
+

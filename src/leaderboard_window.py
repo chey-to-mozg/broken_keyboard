@@ -19,6 +19,7 @@ class LeaderboardWindow:
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
         db = Database()
+        results_to_render = db.get_table_results()
 
         table_frame = tk.Frame(self._mainframe, bg=setups.BackgroundColor)
         table_frame.pack(side=tk.LEFT, anchor=tk.CENTER, padx=(729, 0))
@@ -28,7 +29,7 @@ class LeaderboardWindow:
         header_label.pack(side=tk.TOP)
 
         self.results_body_image = common.load_image('results_body')
-        self.results_body_image = self.results_body_image.zoom(1, len(db.results) + 2)
+        self.results_body_image = self.results_body_image.zoom(1, len(results_to_render) + 2)
         results_frame = tk.Canvas(
             table_frame,
             bg=setups.BackgroundColor,
@@ -40,7 +41,7 @@ class LeaderboardWindow:
         results_frame.pack_propagate(False)
         results_frame.create_image(5, 0, anchor=tk.NW, image=self.results_body_image)
 
-        tk.Label(results_frame, text='ТАБЛИЦА ЛИДЕРОВ:', font=setups.MainInfoFontBold, bg=setups.PanelBackgroundColor).pack(
+        tk.Label(results_frame, text='ТАБЛИЦА ЛИДЕРОВ (ТОП-20):', font=setups.MainInfoFontBold, bg=setups.PanelBackgroundColor).pack(
             side=tk.TOP
         )
 
@@ -59,7 +60,7 @@ class LeaderboardWindow:
             tk.Label(frame, text=header, bg=setups.PanelBackgroundColor, font=setups.MainInfoFont).pack(side=tk.TOP)
 
         # generate table with correct sizes
-        for res_idx, (name, result) in enumerate(db.results.items()):
+        for res_idx, (name, result) in enumerate(results_to_render.items()):
             position = f'{res_idx + 1}.'
             row = []
             row_values = [position, name, str(result[0])]  #, str(result[1]), str(result[2])]
