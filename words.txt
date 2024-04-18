@@ -2,41 +2,25 @@ bug
 feature
 requirements
 automation
-manual testing
 priority
-black box
-grey box
-white box
+blackbox
+greybox
+whitebox
 testcase
 Selenium
 WebDriver
 Framework
 Assertions
 Integration
-Functional
 Regression
 Performance
-Virtual Environment
 Debugging
 Logging
-Parameterization
-Continuous Integration
-Continuous Deployment
-Cross-Browser Testing
-Behavior-Driven Development
-Test-Driven Development
-Page Object Model
-Continuous Testing
-Agile Methodology
-Performance Testing
-Selenium Grid
+BDD
+TDD
 Fixtures
-Robot Framework
-Agile
-authentication
 capacity
 checklist
-compatibility
 component
 context
 coverage
@@ -54,7 +38,6 @@ integration
 interface
 level
 localization
-maintainability
 maintenance
 master
 measurement
@@ -69,7 +52,6 @@ product
 quality
 risk
 random
-regression
 requirement
 retrospective
 review
@@ -82,3 +64,8 @@ usability
 user
 validation
 verification
+pytest
+confluence
+jira
+server
+telecom
