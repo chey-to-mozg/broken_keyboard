@@ -5,6 +5,7 @@ from src.menu_window import MainMenu
 from src.result_window import ResultWindow
 from src.setups import ROOT
 from enum import Enum
+import random
 
 
 class States(Enum):
@@ -30,7 +31,6 @@ class MainWindow:
 
         # load current key mapping
         self._key_mapping = {}
-        self._load_keys_mapping()
 
         self._timer_init = initial_timer
 
@@ -55,6 +55,7 @@ class MainWindow:
                     return
 
     def _start_game(self, *args):
+        self._gen_key_mapping()
         window = GameWindow(
             self._root,
             self._words,
@@ -82,9 +83,9 @@ class MainWindow:
         self._results = None
         window = MainMenu(self._root)
         window.render_window()
-        self._root.unbind('<Return>')
         if self._state == States.exit:
             return
+        self._root.unbind('<Return>')
         if username := window.get_username():
             self._username = username.lower()
             if not self._username.startswith('@'):
@@ -101,6 +102,7 @@ class MainWindow:
         self._state = States.menu
 
     def _on_close(self):
+        self._root.unbind('<Return>')
         self._state = States.exit
         self._root.destroy()
 
@@ -114,3 +116,12 @@ class MainWindow:
             for row in f:
                 keys = row.rstrip('\n').split(':')
                 self._key_mapping[keys[0]] = keys[1]
+
+    def _gen_key_mapping(self):
+        self._key_mapping = {}
+        keys = [chr(i) for i in range(97, 123)]
+        idxs = random.sample(range(len(keys)), 5)
+        selected_keys = [keys[i] for i in idxs]
+        idxs.append(idxs.pop(0))
+        for i, idx in enumerate(idxs):
+            self._key_mapping[keys[idx]] = selected_keys[i]
