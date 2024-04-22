@@ -7,12 +7,8 @@ from src.database import Database
 
 
 class LeaderboardWindow:
-    def __init__(self, root: tk.Tk, open_menu_callback: Callable):
-        self._open_menu_callback = open_menu_callback
-
+    def __init__(self, root: tk.Tk):
         self._init_controls(root)
-
-        root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
@@ -96,5 +92,8 @@ class LeaderboardWindow:
         return spaces
 
     def _open_menu(self, *args):
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self._open_menu_callback()
+
+    def render_window(self):
+        self._mainframe.mainloop()

@@ -10,6 +10,7 @@ class GameResults:
         self.total_words = 0
         self.total_keys = 0
         self.correct_keys = 0
+        self.correct_words = []
 
 
 def get_image_path(filename: str) -> str:

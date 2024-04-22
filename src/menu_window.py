@@ -7,19 +7,19 @@ from src import common, setups
 
 
 class MainMenu:
-    def __init__(self, root: tk.Tk, set_user_callback: Callable, open_leaderboard_callback: Callable):
-        self.set_user_callback = set_user_callback
-        self.open_leaderboard_callback = open_leaderboard_callback
+    def __init__(self, root: tk.Tk):
+        self.root = root
 
         self._username = tk.StringVar(value='@telegram_tag')
+        self._start_pressed = False
 
         self._init_controls(root)
-
-        root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor, highlightthickness=0)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
+
+        root.bind('<Return>', self._set_user_and_start)
 
         button = common.gen_button(self._mainframe, 'table_button', self._open_leaderboard)
         button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
@@ -102,8 +102,9 @@ class MainMenu:
         self._mainframe.create_image(94, 645, anchor=tk.NW, image=self.bug)
 
     def _set_user_and_start(self, *args):
+        self._start_pressed = True
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self.set_user_callback(self._username.get())
 
     def _clear_username_entity(self, *args):
         if self._username.get() == '@telegram_tag':
@@ -111,9 +112,18 @@ class MainMenu:
             self._username.set('')
 
     def _open_leaderboard(self, *args):
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self.open_leaderboard_callback()
 
     def _open_link(self, *args):
         link = 'https://engineer.yadro.com/wp-content/uploads/2024/03/privacy-policy.pdf'
         webbrowser.open(link)
+
+    def render_window(self):
+        self._mainframe.mainloop()
+
+    def get_username(self) -> str | None:
+        if self._start_pressed:
+            return self._username.get()
+        else:
+            return None

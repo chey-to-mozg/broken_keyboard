@@ -13,9 +13,7 @@ class GameWindow:
             root: tk.Tk,
             words: list[str],
             key_mapping: dict[str, str],
-            timer_init: int,
-            interrupt_game_callback: Callable,
-            set_results_callback: Callable,
+            timer_init: int
     ):
         self._results = common.GameResults()
 
@@ -24,8 +22,7 @@ class GameWindow:
         self._game_started = False
         self._timer_start = timer_init
 
-        self._interrupt_game_callback = interrupt_game_callback
-        self._set_results_callback = set_results_callback
+        self._game_finished = False
 
         self._words = copy.copy(words)
         random.shuffle(self._words)
@@ -38,13 +35,11 @@ class GameWindow:
         self._mainframe.bind_all('<KeyPress>', self._process_button_press)
         self._mainframe.bind_all('<KeyRelease>', self._process_button_release)
 
-        root.mainloop()
-
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
-        button = common.gen_button(self._mainframe, 'menu_button', self._interrupt_game)
+        button = common.gen_button(self._mainframe, 'menu_button', self._destroy_window)
         button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
 
         self._timer_value = tk.StringVar(value='')
@@ -153,18 +148,11 @@ class GameWindow:
             swapped_key = self._key_mapping.get(key, key)
             self._keys_to_label_mapping[swapped_key].config(image=self.key_image)
 
-    def _destroy_window(self):
+    def _destroy_window(self, *args):
         self._mainframe.unbind_all('<KeyPress>')
         self._mainframe.unbind_all('<KeyRelease>')
+        self._mainframe.quit()
         self._mainframe.destroy()
-
-    def _set_result(self):
-        self._destroy_window()
-        self._set_results_callback(self._results, self._words[: self._current_word_idx])
-
-    def _interrupt_game(self, *args):
-        self._destroy_window()
-        self._interrupt_game_callback()
 
     def _gen_timer_value(self, seconds: int):
         minutes = seconds // 60
@@ -175,7 +163,19 @@ class GameWindow:
         diff = time.time() - self._time_of_start
         current_timer = int(self._timer_start - diff)
         if current_timer <= 0:
-            self._set_result()
+            self._game_finished = True
+            self._destroy_window()
+            return
 
         self._gen_timer_value(current_timer)
         self._mainframe.after(100, self._update_timer)
+
+    def render_window(self):
+        self._mainframe.mainloop()
+
+    def get_results(self) -> common.GameResults | None:
+        if self._game_finished:
+            self._results.correct_words = self._words[: self._current_word_idx]
+            return self._results
+        else:
+            return None

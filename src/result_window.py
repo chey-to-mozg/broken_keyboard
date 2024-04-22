@@ -10,22 +10,17 @@ class ResultWindow:
         self,
         root: tk.Tk,
         username: str,
-        results: common.GameResults,
-        list_of_words: list[str],
-        menu_callback: Callable,
+        results: common.GameResults
     ):
-        self._menu_callback = menu_callback
 
         # TODO move accuracy calculation to the class
         accuracy = int(results.correct_keys / results.total_keys * 100)  # in %
 
-        self._init_controls(root, username, results, list_of_words)
+        self._init_controls(root, username, results)
 
         Database().safe_result(username, results.total_words, results.correct_keys, accuracy)
 
-        root.mainloop()
-
-    def _init_controls(self, root: tk.Tk, username: str, results: common.GameResults, list_of_words: list[str]):
+    def _init_controls(self, root: tk.Tk, username: str, results: common.GameResults):
         # TODO create inheritance classes with default background
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
@@ -40,7 +35,7 @@ class ResultWindow:
             bg=setups.BackgroundColor,
             fg=setups.BlueTextColor,
         ).pack(anchor=tk.NW, pady=5)
-        for word in list_of_words:
+        for word in results.correct_words:
             tk.Label(combined_frame, text=word.upper(), font=setups.ResultWordFont, bg=setups.BackgroundColor).pack(
                 anchor=tk.NW, pady=5
             )
@@ -124,5 +119,10 @@ class ResultWindow:
         self._mainframe.create_image(450, 400, anchor=tk.NW, image=self.bug)
 
     def _open_menu(self, *args):
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self._menu_callback()
+
+    def render_window(self):
+        self._mainframe.mainloop()
+
+
