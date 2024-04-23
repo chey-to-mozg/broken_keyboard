@@ -88,8 +88,6 @@ class MainWindow:
         self._root.unbind('<Return>')
         if username := window.get_username():
             self._username = username.lower()
-            if not self._username.startswith('@'):
-                self._username = f'@{self._username}'
             self._state = States.game
         else:
             self._state = States.leaderboard

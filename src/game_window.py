@@ -73,6 +73,9 @@ class GameWindow:
 
         self.label_image = common.load_image('letter_field')
 
+        if self._current_word_idx >= len(self._words):
+            self._words.extend(self._words)
+
         for letter in self._words[self._current_word_idx]:
             label = tk.Label(
                 self._word_frame, image=self.label_image, text=letter, compound='center', font=setups.LettersFont,
