@@ -5,12 +5,14 @@ from typing import Callable
 
 from src import common, setups
 
+_DEFAULT_NAME = 'username'
+
 
 class MainMenu:
     def __init__(self, root: tk.Tk):
         self.root = root
 
-        self._username = tk.StringVar(value='@telegram_tag')
+        self._username = tk.StringVar(value=_DEFAULT_NAME)
         self._start_pressed = False
 
         self._init_controls(root)
@@ -47,13 +49,13 @@ class MainMenu:
         ).pack(pady=(40, 16))
         tk.Label(
             combined_frame,
-            text='Введи свой телеграм-ник,',
+            text='Введи свой ник,',
             font=setups.MainInfoFont,
             bg=setups.PanelBackgroundColor,
         ).pack(pady=(0, 1))
         tk.Label(
             combined_frame,
-            text='так мы сможем связаться с победителем',
+            text='чтобы отслеживать результат в таблице',
             font=setups.MainInfoFont,
             bg=setups.PanelBackgroundColor,
         ).pack(pady=(0, 30))
@@ -78,15 +80,13 @@ class MainMenu:
 
         policy_text = tk.Label(
             self._mainframe,
-            text='Мы не будем передавать твои контакты рекрутерам, слать рассылки.\n'
-            'Нам просто нужно как-то сообщить о результатах игры победителям.\n'
-            'Но для этого нужно твое согласие:',
+            text='Все введенные данные хранятся у тебя в папке с игрой и никуда не отправляются',
             font=setups.AdditionalInfoFont,
             bg=setups.BackgroundColor,
         )
         policy_link = tk.Label(
             self._mainframe,
-            text='Согласие на обработку персональных данных',
+            text='',
             fg=setups.BlueTextColor,
             font=setups.AdditionalInfoFont,
             bg=setups.BackgroundColor,
@@ -107,7 +107,7 @@ class MainMenu:
         self._mainframe.destroy()
 
     def _clear_username_entity(self, *args):
-        if self._username.get() == '@telegram_tag':
+        if self._username.get() == _DEFAULT_NAME:
             self.username_entity.config(fg='black')
             self._username.set('')
 
