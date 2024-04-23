@@ -1,11 +1,12 @@
+import random
+from enum import Enum
+
 from src import common
 from src.game_window import GameWindow
 from src.leaderboard_window import LeaderboardWindow
 from src.menu_window import MainMenu
 from src.result_window import ResultWindow
 from src.setups import ROOT
-from enum import Enum
-import random
 
 
 class States(Enum):
@@ -56,12 +57,7 @@ class MainWindow:
 
     def _start_game(self, *args):
         self._gen_key_mapping()
-        window = GameWindow(
-            self._root,
-            self._words,
-            self._key_mapping,
-            self._timer_init
-        )
+        window = GameWindow(self._root, self._words, self._key_mapping, self._timer_init)
         window.render_window()
         if self._state == States.exit:
             return

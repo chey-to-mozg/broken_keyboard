@@ -20,7 +20,9 @@ class Database:
                         continue
                     keys = row.rstrip('\n').split(':')
                     metrics = [int(val) for val in keys[1].split(',')]
-                    if keys[0] in self.results and self._sorter(('tag', metrics)) < self._sorter(('tag', self.results[keys[0]])):
+                    if keys[0] in self.results and self._sorter(('tag', metrics)) < self._sorter(
+                        ('tag', self.results[keys[0]])
+                    ):
                         continue
                     self.results[keys[0]] = metrics
             self.results = dict(sorted(self.results.items(), key=self._sorter, reverse=True))
@@ -58,4 +60,3 @@ class Database:
                 break
             table_results[name] = res
         return table_results
-

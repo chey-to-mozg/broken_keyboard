@@ -21,7 +21,9 @@ class LeaderboardWindow:
         table_frame.pack(side=tk.LEFT, anchor=tk.CENTER, padx=(729, 0))
 
         self.results_header_image = common.load_image('results_header')
-        header_label = tk.Label(table_frame, image=self.results_header_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
+        header_label = tk.Label(
+            table_frame, image=self.results_header_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor
+        )
         header_label.pack(side=tk.TOP)
 
         self.results_body_image = common.load_image('results_body')
@@ -37,9 +39,12 @@ class LeaderboardWindow:
         results_frame.pack_propagate(False)
         results_frame.create_image(5, 0, anchor=tk.NW, image=self.results_body_image)
 
-        tk.Label(results_frame, text='ТАБЛИЦА ЛИДЕРОВ (ТОП-20):', font=setups.MainInfoFontBold, bg=setups.PanelBackgroundColor).pack(
-            side=tk.TOP
-        )
+        tk.Label(
+            results_frame,
+            text='ТАБЛИЦА ЛИДЕРОВ (ТОП-20):',
+            font=setups.MainInfoFontBold,
+            bg=setups.PanelBackgroundColor,
+        ).pack(side=tk.TOP)
 
         # make array and add loop to row generation
         position_header = 'Позиция'
@@ -59,11 +64,9 @@ class LeaderboardWindow:
         for res_idx, (name, result) in enumerate(results_to_render.items()):
             position = f'{res_idx + 1}.'
             row = []
-            row_values = [position, name, str(result[0])]  #, str(result[1]), str(result[2])]
+            row_values = [position, name, str(result[0])]  # , str(result[1]), str(result[2])]
             for value, frame in zip(row_values, frames):
-                tk.Label(frame, text=value, font=setups.MainInfoFont, bg=setups.PanelBackgroundColor).pack(
-                    side=tk.TOP
-                )
+                tk.Label(frame, text=value, font=setups.MainInfoFont, bg=setups.PanelBackgroundColor).pack(side=tk.TOP)
 
         position_combined_frame.pack(side=tk.LEFT, expand=1, anchor=tk.E)
         tag_combined_frame.pack(side=tk.LEFT, expand=1)
@@ -72,7 +75,9 @@ class LeaderboardWindow:
         results_frame.pack(side=tk.TOP)
 
         self.results_footer_image = common.load_image('results_footer')
-        footer_label = tk.Label(table_frame, image=self.results_footer_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor)
+        footer_label = tk.Label(
+            table_frame, image=self.results_footer_image, borderwidth=0, highlightthickness=0, bg=setups.BackgroundColor
+        )
         footer_label.pack(side=tk.TOP)
 
         button = common.gen_button(self._mainframe, 'menu_button', self._open_menu)

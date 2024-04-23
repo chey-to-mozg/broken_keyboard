@@ -6,12 +6,7 @@ from src.database import Database
 
 
 class ResultWindow:
-    def __init__(
-        self,
-        root: tk.Tk,
-        username: str,
-        results: common.GameResults
-    ):
+    def __init__(self, root: tk.Tk, username: str, results: common.GameResults):
 
         # TODO move accuracy calculation to the class
         accuracy = int(results.correct_keys / results.total_keys * 100)  # in %
@@ -124,5 +119,3 @@ class ResultWindow:
 
     def render_window(self):
         self._mainframe.mainloop()
-
-
