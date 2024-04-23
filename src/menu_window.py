@@ -5,24 +5,26 @@ from typing import Callable
 
 from src import common, setups
 
+_DEFAULT_NAME = 'username'
+
 
 class MainMenu:
-    def __init__(self, root: tk.Tk, set_user_callback: Callable, open_leaderboard_callback: Callable):
-        self.set_user_callback = set_user_callback
-        self.open_leaderboard_callback = open_leaderboard_callback
+    def __init__(self, root: tk.Tk):
+        self.root = root
 
-        self._username = tk.StringVar(value='@telegram_tag')
+        self._username = tk.StringVar(value=_DEFAULT_NAME)
+        self._start_pressed = False
 
         self._init_controls(root)
-
-        root.mainloop()
 
     def _init_controls(self, root: tk.Tk):
         self._mainframe = tk.Canvas(root, bg=setups.BackgroundColor, highlightthickness=0)
         self._mainframe.pack(fill=tk.BOTH, expand=1)
 
+        root.bind('<Return>', self._set_user_and_start)
+
         button = common.gen_button(self._mainframe, 'table_button', self._open_leaderboard)
-        button.pack(side=tk.TOP, anchor=tk.NE)
+        button.pack(side=tk.TOP, anchor=tk.NE, padx=60, pady=60)
 
         self.panel_with_controls_image = common.load_image('panel_with_controls')
         control_panel = tk.Canvas(
@@ -37,54 +39,54 @@ class MainMenu:
         control_panel.pack(expand=1)
 
         combined_frame = tk.Frame(control_panel, bg=setups.PanelBackgroundColor)
-        combined_frame.pack(expand=1)
+        combined_frame.pack(pady=(30, 0))
 
         tk.Label(
             combined_frame,
             text='Привет!',
             font=setups.MainInfoFontBigBold,
-            background=setups.PanelBackgroundColor,
-        ).pack(pady=5, padx=5)
+            bg=setups.PanelBackgroundColor,
+        ).pack(pady=(40, 16))
         tk.Label(
             combined_frame,
-            text='Введи свой телеграм-ник,',
+            text='Введи свой ник,',
             font=setups.MainInfoFont,
-            background=setups.PanelBackgroundColor,
-        ).pack(expand=1)
+            bg=setups.PanelBackgroundColor,
+        ).pack(pady=(0, 1))
         tk.Label(
             combined_frame,
-            text='так мы сможем связаться с победителем',
+            text='чтобы отслеживать результат в таблице',
             font=setups.MainInfoFont,
-            background=setups.PanelBackgroundColor,
-        ).pack(expand=1)
+            bg=setups.PanelBackgroundColor,
+        ).pack(pady=(0, 30))
 
-        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=5, width=20, height=10)
+        frame = ttk.Frame(combined_frame, style="RoundedFrame", padding=2, width=25, height=5)
         self.username_entity = tk.Entry(
             frame,
             textvariable=self._username,
             borderwidth=0,
-            background=setups.BackgroundColor,
+            bg=setups.BackgroundColor,
+            fg=setups.GrayTextColor,
             font=setups.MainInfoFontBig,
             justify='center',
-            width=20,
+            width=21,
         )
         self.username_entity.pack(expand=1, pady=(10, 10))
-        frame.pack(expand=1, pady=(20, 20))
+        self.username_entity.bind('<Button-1>', self._clear_username_entity)
+        frame.pack(pady=(0, 30))
 
         button = common.gen_button(combined_frame, 'start_button', self._set_user_and_start)
-        button.pack(expand=1)
+        button.pack()
 
         policy_text = tk.Label(
             self._mainframe,
-            text='Мы не будем передавать твои контакты рекрутерам, слать рассылки.\n'
-            'Нам просто нужно как-то сообщить о результатах игры победителям.\n'
-            'Но для этого нужно твое согласие:',
+            text='Все введенные данные хранятся у тебя в папке с игрой и никуда не отправляются',
             font=setups.AdditionalInfoFont,
             bg=setups.BackgroundColor,
         )
         policy_link = tk.Label(
             self._mainframe,
-            text='Согласие на обработку персональных данных',
+            text='',
             fg=setups.BlueTextColor,
             font=setups.AdditionalInfoFont,
             bg=setups.BackgroundColor,
@@ -93,17 +95,35 @@ class MainMenu:
         policy_link.pack(side=tk.BOTTOM)
         policy_text.pack(side=tk.BOTTOM)
 
-        image = tk.PhotoImage(file='test.png')
-        self._mainframe.create_image(10, 10, anchor=tk.NW, image=image)
+        self.logo_image = common.load_image('logo')
+        self._mainframe.create_image(94, 60, anchor=tk.NW, image=self.logo_image)
+
+        self.bug = common.load_image('bug')
+        self._mainframe.create_image(94, 645, anchor=tk.NW, image=self.bug)
 
     def _set_user_and_start(self, *args):
+        self._start_pressed = True
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self.set_user_callback(self._username.get())
+
+    def _clear_username_entity(self, *args):
+        if self._username.get() == _DEFAULT_NAME:
+            self.username_entity.config(fg='black')
+            self._username.set('')
 
     def _open_leaderboard(self, *args):
+        self._mainframe.quit()
         self._mainframe.destroy()
-        self.open_leaderboard_callback()
 
     def _open_link(self, *args):
         link = 'https://engineer.yadro.com/wp-content/uploads/2024/03/privacy-policy.pdf'
         webbrowser.open(link)
+
+    def render_window(self):
+        self._mainframe.mainloop()
+
+    def get_username(self) -> str | None:
+        if self._start_pressed:
+            return self._username.get()
+        else:
+            return None

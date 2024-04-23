@@ -1,10 +1,9 @@
-programmer
-command
-linux
-windows
-user
-telecom
-yadro
-task
-job
-Test Word
+add
+your
+words
+here
+to
+display
+them
+in
+game
